@@ -7,12 +7,15 @@ An offline, responsive demo of the [Boost](https://boostapp.io) food ordering ap
 1. Open `index.html` in Chrome.
 2. Resize the window: below 900px it is the phone app (bottom nav, Scan & Pay FAB); at 900px and up it becomes the desktop site (left rail, centered 1200px column) like boostapp.io in a browser.
 
-Fonts load from Google Fonts on first load (cached afterward); everything else is fully offline. Payments are simulated.
+Fonts load from Google Fonts on first load (cached afterward); everything else is fully offline.
+
+> **Demonstration only.** Menus, prices, the user account and payments are simulated. This site is not connected to the live Boost service and is not an official Boost or Compass Group product.
 
 ## Structure
 
 ```
 index.html                     Single-file vanilla JS SPA (all HTML/CSS/JS)
+robots.txt                     Disallow all crawlers (page also carries noindex + a CSP meta)
 images/                        Menu and venue photos, boost-icon.png (app icon) and favicon.png
 reference/scripts/             Image re-download helpers (from Thrive)
 reference/BOOST_PROJECT_CONTEXT.md   Working notes for continuing in Claude
@@ -68,6 +71,16 @@ Phone-first. One `@media (min-width:900px)` block turns the app into the desktop
 - Confirm official typeface (brand PDF is image-only; Nunito Sans is a stand-in)
 - Optional: Boost-specific hero photography (`images/img_hero.png` is the neutral chef photo from Thrive)
 - Beverage/side modifiers, receipt screen, loyalty, real Scan & Pay, cart quantity steppers (inherited gaps)
+
+## Publishing Checklist
+
+- No real people or clients: the account tab shows a fictional user (`Alex Demo`), site names are fictional. Keep it that way.
+- No secrets: the app is fully static and must stay that way. Never add live Boost / CentricOS endpoints or keys to this file; a real integration belongs behind a server.
+- `reference/` is git-ignored (brand PDF, working notes with local paths, image scripts) — don't force-add it.
+- `<meta http-equiv="Content-Security-Policy">` limits the page to itself plus Google Fonts (`connect-src 'none'`, `object-src 'none'`). Clickjacking protection (`frame-ancestors` / `X-Frame-Options`) can only be set as an HTTP header by the host, not in the page. If you add an external resource, extend the policy deliberately.
+- `robots.txt` + `noindex` keep the demo out of search if it is hosted.
+- On GitHub: keep the repo private unless there's a reason not to; enable secret scanning and push protection (Settings → Code security).
+- Optional: self-host the Nunito Sans woff2 files to remove the only third-party request.
 
 ## Image Credits
 

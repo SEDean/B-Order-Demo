@@ -1,0 +1,7 @@
+# Local-only reference material (brand assets, source images, legacy scripts)
+reference/
+
+# OS cruft
+.DS_Store
+Thumbs.db
+desktop.ini

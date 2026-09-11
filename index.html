@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<link rel="icon" type="image/png" href="images/favicon.png">
+<link rel="apple-touch-icon" href="images/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Boost &#x2014; SE Demo Site</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;0,6..12,800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  /* Boost brand tokens — In-App Colors from the brand guide, surfaces sampled from boostapp.io */
+  --green:#008078;        /* Primary Teal 1 — Boost Green: buttons, links, active nav, bars */
+  --green-2:#004D47;      /* Queensland Teal: section labels, dark accents */
+  --green-3:#69B8AD;      /* Primary Teal 2 — Boost Light Green */
+  --green-4:#C0DCDA;      /* Primary Teal 3 — Bkground Green: tinted highlights */
+  --green-5:#E3ECEA;      /* image placeholders */
+  --page-bg:#FFFFFF;      /* content column */
+  --outer:#F2F2F2;        /* canvas behind the column (desktop) */
+  --surface:#EFF1ED;      /* cards on white: sign-in card, category tab strip */
+  --rail:#F8FAF6;         /* desktop side rail */
+  --white:#ffffff;
+  --text:#191C1A;         /* near-black body text (live site) */
+  --muted:#5F6B68;        /* secondary text */
+  --border:#E1E5E2;
+  --honey:#D37A00;        /* Secondary 1 — Honey Yellow */
+  --accent:#F5A622;       /* Secondary 2 — Accent Yellow */
+  --rust:#D90057;         /* Error — Boost Pink: cart badge (as on live site), errors */
+  --radius:16px;
+  --safe-bot:env(safe-area-inset-bottom,0px);
+  --font-heading:'Nunito Sans','Avenir Next','Avenir',system-ui,sans-serif;
+  --font-ui:'Nunito Sans','Avenir Next','Avenir',system-ui,sans-serif;
+  --font-small:'Nunito Sans','Avenir Next','Avenir',system-ui,sans-serif;
+}
+html,body{height:100%;background:var(--outer);font-family:var(--font-ui);overflow:hidden;}
+#app{width:100%;height:100dvh;margin:0 auto;background:var(--page-bg);position:relative;overflow:hidden;}
+.screen{position:absolute;inset:0;background:var(--page-bg);overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);}
+.screen.active{transform:translateX(0);}
+#bottom-nav{position:absolute;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--border);display:flex;z-index:80;padding-bottom:calc(8px + var(--safe-bot));}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 0 4px;gap:3px;font-size:11px;font-weight:500;color:#6B7573;border:none;background:none;cursor:pointer;font-family:var(--font-small);}
+.nav-btn.active{color:var(--green);}
+.nav-btn svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+#fab-scan{position:absolute;bottom:calc(72px + var(--safe-bot) + 8px);right:16px;z-index:79;background:var(--green);color:#fff;border:none;border-radius:28px;padding:13px 18px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 4px 18px rgba(0,77,71,.5);font-family:var(--font-ui);}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;position:sticky;top:0;z-index:20;}
+.hdr.over{position:absolute;width:100%;top:0;background:transparent;}
+.hdr.light{background:var(--page-bg);}
+.hdr-light{background:var(--page-bg);}
+.hdr-light .back-btn.circle{background:transparent;}
+.hdr-light .back-btn svg,.hdr-light .icon-btn svg{stroke:var(--green);}
+.hdr-light .basket-btn{border-color:var(--green);}
+.hdr-light .basket-btn svg{stroke:var(--green);}
+.hdr-light .site-link{color:var(--green);}
+.site-link{background:none;border:none;padding:0;font-size:13px;color:rgba(255,255,255,.95);text-decoration:underline;display:flex;align-items:center;gap:3px;cursor:pointer;font-weight:500;font-family:var(--font-small);letter-spacing:.3px;background:none;border:none;padding:0;}
+.site-link.dark{color:var(--green);}
+.basket-wrap{position:relative;}
+.basket-btn{width:44px;height:44px;border-radius:50%;border:2px solid rgba(255,255,255,.85);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.basket-btn.dark{border-color:var(--green);}
+.basket-btn svg{width:20px;height:20px;stroke:rgba(255,255,255,.95);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.basket-btn.dark svg{stroke:var(--green);}
+.basket-btn.solid{background:var(--green);border-color:var(--green);}
+.basket-btn.solid svg{stroke:#fff;}
+.badge{position:absolute;top:-4px;right:-4px;background:var(--rust);color:#fff;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--page-bg);}
+.badge.on-solid{background:var(--rust);color:#fff;}
+.back-btn{width:40px;height:40px;display:flex;align-items:center;justify-content:center;border:none;background:none;cursor:pointer;border-radius:50%;}
+.back-btn.circle{background:rgba(255,255,255,.88);}
+.back-btn svg{width:22px;height:22px;stroke:var(--text);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.icon-btn{width:40px;height:40px;display:flex;align-items:center;justify-content:center;border:none;background:none;cursor:pointer;}
+.icon-btn svg{width:22px;height:22px;stroke:rgba(255,255,255,.9);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+/* HOME */
+.home-hero{position:relative;width:100%;height:270px;flex-shrink:0;overflow:hidden;}
+.home-hero img{width:100%;height:100%;object-fit:cover;display:block;}
+.home-hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.4) 0%,rgba(0,0,0,.15) 60%,rgba(0,0,0,0) 100%);}
+.greeting{position:absolute;top:50%;left:20px;right:20px;transform:translateY(-50%);text-align:center;color:#fff;font-size:28px;font-weight:700;line-height:1.25;text-shadow:0 2px 8px rgba(0,0,0,.35);font-family:var(--font-heading);transition:opacity .2s;}
+.home-body{background:var(--page-bg);border-radius:22px 22px 0 0;margin-top:-18px;position:relative;z-index:1;padding-bottom:calc(88px + var(--safe-bot));}
+.section{padding:20px 20px 0;}
+.sec-title{font-size:22px;font-weight:700;color:var(--text);margin-bottom:14px;font-family:var(--font-heading);}
+.order-again-scroll{overflow-x:auto;scrollbar-width:none;padding:0 20px 16px;display:flex;gap:12px;}
+.order-again-scroll::-webkit-scrollbar{display:none;}
+.oa-card{background:var(--white);border-radius:var(--radius);padding:16px 14px;min-width:220px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.07);cursor:pointer;flex-shrink:0;border-bottom:3px solid var(--green);}
+.oa-venue{font-size:15px;font-weight:700;color:var(--text);font-family:var(--font-heading);}
+.oa-item{font-size:13px;color:var(--muted);margin-top:2px;}
+.add-circle{width:38px;height:38px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;flex-shrink:0;}
+.add-circle svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2.5;}
+/* VENUE CARDS */
+.venue-card{background:var(--white);border-radius:var(--radius);overflow:hidden;margin-bottom:14px;cursor:pointer;box-shadow:0 1px 5px rgba(0,0,0,.08);}
+.venue-card img{width:100%;height:180px;object-fit:cover;display:block;background:var(--green-5);}
+.venue-info{padding:14px 16px 16px;}
+.venue-name{font-size:18px;font-weight:700;color:var(--text);font-family:var(--font-heading);}
+.venue-loc{font-size:14px;color:var(--muted);margin-top:2px;}
+.venue-meta{margin-top:10px;display:flex;flex-direction:column;gap:5px;}
+.venue-open{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--green-2);font-weight:600;}
+.venue-time{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--muted);}
+.venue-open svg,.venue-time svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;flex-shrink:0;}
+.allergy-text{font-size:13px;color:var(--muted);line-height:1.55;padding:4px 20px 24px;}
+/* VENUE SCREEN */
+.venue-hero{position:relative;height:220px;overflow:hidden;flex-shrink:0;}
+.venue-hero img{width:100%;height:100%;object-fit:cover;display:block;background:var(--green-5);}
+.venue-hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 35%,rgba(0,0,0,.65) 100%);}
+.venue-hero-text{position:absolute;bottom:16px;left:0;right:0;text-align:center;color:#fff;}
+.vh-name{font-size:24px;font-weight:700;font-family:var(--font-heading);}
+.vh-sub{font-size:13px;opacity:.88;margin-top:3px;}
+.cat-tabs{background:var(--surface);padding:10px 14px;display:flex;align-items:center;gap:10px;overflow-x:auto;scrollbar-width:none;position:sticky;top:68px;z-index:15;}
+.cat-tabs::-webkit-scrollbar{display:none;}
+.menu-list-btn{flex-shrink:0;background:none;border:none;cursor:pointer;}
+.menu-list-btn svg{width:20px;height:20px;stroke:var(--text);fill:none;stroke-width:1.8;}
+.tab{padding:8px 18px;border-radius:50px;font-size:11px;font-weight:600;letter-spacing:1px;white-space:nowrap;flex-shrink:0;cursor:pointer;background:none;border:2px solid transparent;font-family:var(--font-small);text-transform:uppercase;}
+.tab.sel{border-color:var(--green);color:var(--text);background:#FFFFFF;}
+.tab.unsel{color:var(--muted);}
+.menu-body{padding:0 20px;padding-bottom:calc(24px + var(--safe-bot));}
+.menu-sec-hdr{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--green-2);margin:18px 0 4px;font-family:var(--font-small);}
+.menu-item{display:flex;align-items:flex-start;gap:14px;padding:16px 20px;margin:0 -20px;border-bottom:1px solid var(--border);cursor:pointer;background:var(--white);}
+.menu-item:last-child{border-bottom:none;}
+.menu-item:hover{background:var(--surface);}
+.mi-info{flex:1;}
+.mi-name{font-size:15px;font-weight:600;color:var(--text);margin-bottom:2px;font-family:var(--font-ui);}
+.mi-kcal{font-size:13px;color:var(--muted);margin-bottom:5px;}
+.mi-desc{font-size:13px;color:var(--muted);line-height:1.4;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.mi-price{font-size:15px;font-weight:700;color:var(--text);}
+.mi-img{width:82px;height:82px;border-radius:10px;object-fit:cover;flex-shrink:0;background:var(--green-5);}
+.mi-img.bev{object-fit:contain;border:1px solid var(--border);background:var(--white);padding:5px;}
+/* ITEM DETAIL */
+#screen-item{overflow:hidden;display:flex;flex-direction:column;}
+#item-scroll-area{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.item-hero{height:56vw;max-height:260px;overflow:hidden;flex-shrink:0;position:relative;}
+.item-hero img{width:100%;height:100%;object-fit:cover;display:block;background:var(--green-5);}
+.item-body{background:var(--page-bg);}
+.item-title-wrap{padding:20px 20px 16px;text-align:center;border-bottom:1px solid var(--border);}
+.item-title-wrap h1{font-size:20px;font-weight:700;color:var(--text);font-family:var(--font-heading);}
+.item-title-wrap .kcal{font-size:14px;color:var(--muted);margin:5px 0;}
+.item-title-wrap .desc{font-size:14px;color:var(--muted);line-height:1.5;margin-top:8px;}
+.qty-row{display:flex;align-items:center;justify-content:center;gap:22px;padding:16px 0;border-bottom:1px solid var(--border);}
+.qty-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--text);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--text);font-weight:300;}
+.qty-num{font-size:18px;font-weight:700;min-width:28px;text-align:center;}
+.taste-hdr{padding:14px 20px;}
+.taste-hdr h3{font-size:16px;font-weight:700;color:var(--text);font-family:var(--font-heading);}
+.taste-hdr p{font-size:13px;color:var(--muted);margin-top:2px;}
+.mod-group{border-top:1px solid var(--border);}
+.mod-grp-hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:14px 20px 10px;}
+.mod-grp-title{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--green-2);flex:1;line-height:1.4;font-family:var(--font-small);}
+.opt-badge{background:var(--page-bg);color:var(--muted);font-size:12px;padding:4px 12px;border-radius:50px;border:1px solid var(--border);white-space:nowrap;flex-shrink:0;}.req-badge{background:var(--green);color:#fff;font-size:12px;padding:4px 12px;border-radius:50px;white-space:nowrap;flex-shrink:0;}
+.mod-item{display:flex;align-items:center;gap:14px;padding:11px 20px;border-top:1px solid var(--border);cursor:pointer;}
+.mod-cb{width:22px;height:22px;border:1.5px solid var(--green-2);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.mod-cb.on{background:var(--green-2);}
+.mod-cb.on::after{content:'\2713';color:#fff;font-size:13px;font-weight:800;}
+.mod-name{flex:1;font-size:15px;color:var(--text);}
+.mod-meta{font-size:13px;color:var(--muted);text-align:right;white-space:nowrap;}
+.sticky-bot{background:var(--page-bg);border-top:1px solid var(--border);padding:12px 20px calc(12px + var(--safe-bot));display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.item-total-label{font-size:15px;color:var(--text);}
+.item-total-label span{font-weight:700;color:var(--green-2);}
+.primary-btn{background:var(--green);color:#fff;border:none;border-radius:10px;padding:14px 28px;font-size:16px;font-weight:600;cursor:pointer;font-family:var(--font-ui);}
+.primary-btn.full{width:100%;border-radius:14px;padding:16px;}
+/* CART */
+.cart-hdr{display:flex;align-items:center;padding:14px 20px;}
+.close-btn{width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--text);background:none;border:none;cursor:pointer;border-radius:50%;}
+.cart-body{padding:0 20px;padding-bottom:calc(80px + var(--safe-bot));}
+.cart-title{font-size:24px;font-weight:700;margin-bottom:16px;color:var(--text);font-family:var(--font-heading);}
+.cart-card{background:var(--white);border-radius:var(--radius);padding:16px;margin-bottom:16px;}
+.pickup-row{padding:10px 0;border-bottom:1px solid var(--border);}
+.pickup-row:last-child{border-bottom:none;}
+.pickup-label{font-size:13px;color:var(--muted);margin-bottom:3px;}
+.pickup-val{font-size:16px;font-weight:700;color:var(--text);font-family:var(--font-heading);}
+.pickup-row-inner{display:flex;align-items:center;justify-content:space-between;}
+.change-btn{border:1.5px solid var(--green);background:none;color:var(--green);border-radius:50px;padding:8px 20px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font-ui);}
+.cart-sec-title{font-size:22px;font-weight:700;margin-bottom:12px;color:var(--text);font-family:var(--font-heading);}
+.cart-venue-label{font-size:16px;font-weight:700;margin-bottom:10px;color:var(--text);font-family:var(--font-heading);}
+.cart-line{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.cart-line-name{font-size:15px;color:var(--text);}
+.cart-line-price{font-size:15px;font-weight:600;color:var(--text);}
+.cart-actions{display:flex;gap:10px;}
+.outline-btn{border:1.5px solid var(--green);background:none;color:var(--green);border-radius:50px;padding:8px 18px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font-ui);}
+.add-item-link{display:flex;align-items:center;gap:6px;color:var(--green-2);font-size:15px;font-weight:600;background:none;border:none;cursor:pointer;padding:8px 0 16px;text-decoration:underline;font-family:var(--font-ui);}
+.pair-title{font-size:22px;font-weight:700;margin-bottom:12px;color:var(--text);font-family:var(--font-heading);}
+.pair-scroll{overflow-x:auto;scrollbar-width:none;display:flex;gap:12px;padding-bottom:4px;}
+.pair-scroll::-webkit-scrollbar{display:none;}
+.pair-card{background:var(--white);border-radius:var(--radius);padding:14px;display:flex;align-items:center;gap:12px;min-width:250px;flex-shrink:0;}
+.pair-img{height:72px;width:52px;object-fit:contain;background:var(--green-5);border-radius:6px;}
+.pair-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.pair-price{font-size:13px;color:var(--muted);}
+.pair-add-btn{border:1.5px solid var(--green);background:none;color:var(--green);border-radius:50px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;margin-top:6px;white-space:nowrap;font-family:var(--font-ui);}
+.payment-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;}
+.payment-row:last-child{border-bottom:none;}
+.pay-label{font-size:13px;color:var(--muted);margin-bottom:3px;}
+.pay-val{font-size:16px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px;}
+.gpay-badge{background:#fff;border:1px solid #e0e0e0;border-radius:4px;padding:1px 5px;font-size:11px;font-weight:700;color:#5f6368;letter-spacing:.5px;}
+.ps-row{display:flex;justify-content:space-between;padding:6px 0;font-size:15px;color:var(--text);}
+.ps-row.total{font-weight:700;font-size:16px;border-top:1px solid var(--border);margin-top:4px;padding-top:12px;font-family:var(--font-heading);}
+/* PAYMENT METHOD */
+.pm-body{padding:20px;padding-bottom:calc(24px + var(--safe-bot));}
+.pm-sec{margin-bottom:24px;}
+.pm-sec-title{font-size:12px;font-weight:600;color:var(--green-2);margin-bottom:10px;letter-spacing:1.5px;text-transform:uppercase;font-family:var(--font-small);}
+.pm-item{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--border);cursor:pointer;}
+.pm-add{display:flex;align-items:center;gap:8px;color:var(--green-2);font-size:15px;font-weight:600;text-decoration:underline;font-family:var(--font-ui);}
+.pm-name{font-size:15px;color:var(--text);display:flex;align-items:center;gap:8px;}
+.pm-check{color:var(--green-2);font-size:18px;font-weight:700;}
+/* SEARCH */
+#search-overlay{position:absolute;inset:0;background:var(--page-bg);z-index:100;display:flex;flex-direction:column;transform:translateY(-100%);transition:transform .25s ease;}
+#search-overlay.open{transform:translateY(0);}
+.search-top{padding:12px 16px;display:flex;align-items:center;gap:10px;}
+.search-input-wrap{flex:1;display:flex;align-items:center;gap:8px;background:var(--white);border-radius:50px;padding:10px 16px;border:1.5px solid var(--border);}
+.search-input-wrap svg{width:18px;height:18px;stroke:var(--muted);fill:none;flex-shrink:0;}
+.search-input-wrap input{flex:1;border:none;outline:none;font-size:15px;background:transparent;color:var(--text);}
+.search-cancel{color:var(--green-2);font-size:15px;font-weight:600;background:none;border:none;cursor:pointer;white-space:nowrap;font-family:var(--font-ui);}
+.search-results{flex:1;overflow-y:auto;padding:0 20px;}
+.search-empty{padding:40px 20px;text-align:center;color:var(--muted);font-size:15px;}
+.search-result-item{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;}
+.sr-img{width:60px;height:60px;border-radius:8px;object-fit:cover;flex-shrink:0;background:var(--green-5);}
+.sr-venue{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px;}
+.sr-name{font-size:15px;font-weight:700;color:var(--text);}
+.sr-price{font-size:14px;color:var(--text);margin-top:3px;}
+/* ORDERS/ACCOUNT */
+.order-hdr{padding:16px 20px;font-size:24px;font-weight:700;color:var(--text);font-family:var(--font-heading);}
+.order-card{margin:0 20px 14px;background:var(--white);border-radius:var(--radius);padding:16px;cursor:pointer;}
+.order-card-venue{font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px;font-family:var(--font-heading);}
+.order-card-items{font-size:14px;color:var(--muted);margin-bottom:8px;}
+.order-card-footer{display:flex;align-items:center;justify-content:space-between;}
+.order-card-date{font-size:13px;color:var(--muted);}
+.order-card-total{font-size:15px;font-weight:700;color:var(--text);}
+.reorder-btn{border:1.5px solid var(--green);background:none;color:var(--green);border-radius:50px;padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-ui);}
+.account-body{padding:20px;padding-bottom:calc(80px + var(--safe-bot));}
+.acct-avatar{width:72px;height:72px;border-radius:50%;background:var(--green);color:#fff;font-size:28px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:12px auto;font-family:var(--font-heading);}
+.acct-name{text-align:center;font-size:22px;font-weight:700;color:var(--text);font-family:var(--font-heading);}
+.acct-email{text-align:center;font-size:14px;color:var(--muted);margin:4px 0 24px;}
+.acct-row{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--border);cursor:pointer;}
+.acct-row-label{font-size:16px;color:var(--text);}
+.acct-row-right{font-size:14px;color:var(--muted);display:flex;align-items:center;gap:6px;}
+.acct-row-right svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:2;}
+/* SUCCESS */
+#screen-success{display:flex;justify-content:center;align-items:center;}
+.success-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;padding:40px 32px;text-align:center;}
+.success-icon{width:80px;height:80px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;}
+.success-icon svg{width:40px;height:40px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+.success-title{font-size:26px;font-weight:700;color:var(--text);font-family:var(--font-heading);}
+.success-sub{font-size:15px;color:var(--muted);line-height:1.5;}
+.success-detail{background:var(--white);border-radius:var(--radius);padding:16px;width:100%;text-align:left;}
+.success-detail-row{display:flex;justify-content:space-between;padding:6px 0;font-size:14px;border-bottom:1px solid var(--border);}
+.success-detail-row:last-child{border-bottom:none;}
+.success-detail-label{color:var(--muted);}
+.success-detail-val{font-weight:700;color:var(--text);}
+/* MODALS */
+#time-modal,#site-modal{position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:150;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .2s;}
+#time-modal.open,#site-modal.open{opacity:1;pointer-events:all;}
+.time-sheet,.site-sheet{background:var(--white);border-radius:22px 22px 0 0;padding:24px 20px calc(24px + var(--safe-bot));width:100%;position:relative;}
+/* Wordmark lockup: app icon (images/boost-icon.png) + "Boost" text. Swap for an official horizontal logo if one is supplied. */
+.wordmark{display:inline-flex;align-items:center;gap:8px;height:28px;}
+.wordmark img{height:100%;width:auto;display:block;border-radius:22%;}
+.wordmark-text{font-family:var(--font-heading);font-weight:800;font-size:24px;letter-spacing:-.5px;color:var(--green);line-height:1;}
+.wordmark.light .wordmark-text{color:#fff;}
+.wordmark.sm{height:24px;gap:6px;}
+.wordmark.sm .wordmark-text{font-size:19px;}
+.time-sheet h2,.site-sheet h2{font-size:20px;font-weight:700;margin-bottom:18px;color:var(--text);font-family:var(--font-heading);}
+.time-option{padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;font-size:16px;color:var(--text);}
+.time-option.sel{font-weight:700;color:var(--green-2);}
+.time-option:last-child{border-bottom:none;}
+.site-row{padding:14px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
+.site-row:last-child{border-bottom:none;}
+.site-row-name{font-size:16px;font-weight:700;color:var(--text);}
+.site-row-desc{font-size:13px;color:var(--muted);margin-top:2px;}
+.sheet-close{position:absolute;top:18px;right:20px;font-size:22px;background:none;border:none;cursor:pointer;color:var(--muted);}
+/* TOAST */
+#toast{position:absolute;bottom:calc(82px + var(--safe-bot));left:50%;transform:translateX(-50%) translateY(16px);background:rgba(25,28,26,.92);color:#fff;padding:11px 22px;border-radius:50px;font-size:14px;font-weight:600;z-index:200;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;white-space:nowrap;max-width:calc(100% - 40px);}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+/* ── HOME: sign-in card + promo tile (mirrors boostapp.io home) ── */
+.signin-card{background:var(--surface);border-radius:14px;padding:18px 16px 16px;margin-bottom:8px;}
+.signin-row{display:flex;align-items:center;gap:16px;margin-bottom:16px;font-size:17px;line-height:1.35;color:var(--text);font-weight:500;}
+.signin-row svg{width:56px;height:48px;flex-shrink:0;stroke:var(--green);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.promo{position:relative;overflow:hidden;border-radius:16px;background:#013934;color:#fff;height:230px;max-width:560px;cursor:pointer;display:flex;flex-direction:column;justify-content:center;padding:24px;gap:6px;}
+.promo-title{font-size:26px;font-weight:700;line-height:1.15;color:#BACE31;max-width:56%;}
+.promo-sub{font-size:14px;opacity:.9;}
+.promo-btn{margin-top:12px;align-self:flex-start;background:#BACE31;color:#013934;border:none;border-radius:50px;padding:11px 26px;font-size:17px;font-weight:700;cursor:pointer;font-family:var(--font-ui);}
+.promo-blob{position:absolute;right:-8%;top:-10%;width:52%;height:130%;background:#BACE31;border-radius:46% 54% 52% 48%/58% 42% 58% 42%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#013934;font-family:Georgia,'Times New Roman',serif;font-size:clamp(20px,5.6vw,34px);line-height:1.05;font-weight:700;padding:0 8% 0 10%;}
+.promo-blob small{display:block;font-size:.55em;letter-spacing:.06em;}
+@media (min-width:900px){.promo-blob{font-size:34px;}}
+.promo-title{font-size:clamp(20px,5.8vw,26px);}
+/* ── CART BAR (shows once the basket has items) ── */
+#cart-bar{position:absolute;left:0;right:0;bottom:calc(64px + var(--safe-bot));z-index:85;background:var(--green);color:#fff;display:none;align-items:center;justify-content:space-between;padding:22px 24px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--font-ui);}
+#cart-bar.show{display:flex;}
+#cart-bar.show~#toast{bottom:calc(150px + var(--safe-bot));}
+@media (min-width:900px){#cart-bar.show~#toast{bottom:92px;}}
+#cart-bar b{font-weight:700;}
+/* ── DESKTOP SIDE RAIL ── */
+#side-rail{display:none;position:absolute;top:0;bottom:0;left:0;width:80px;background:var(--rail);flex-direction:column;align-items:center;padding-top:18px;gap:6px;z-index:90;border-right:1px solid var(--border);}
+.rail-btn{width:64px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0;border:none;background:none;cursor:pointer;font-size:12px;font-weight:500;color:var(--text);font-family:var(--font-ui);border-radius:10px;}
+.rail-btn svg{width:24px;height:24px;stroke:var(--green);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.rail-btn.active{color:var(--green);font-weight:700;}
+.rail-btn:hover{background:rgba(0,128,120,.08);}
+/* ── RESPONSIVE: phone-first; ≥900px becomes rail + centered 1200px column ── */
+@media (min-width:900px){
+  #bottom-nav,#fab-scan{display:none!important;}
+  #side-rail{display:flex;}
+  .screen{left:80px;background:var(--outer);display:flex;flex-direction:column;padding:0 max(0px,calc((100% - 1200px)/2));}
+  .screen>*{flex-shrink:0;background:var(--page-bg);}
+  .screen::after{content:'';flex:1;background:var(--page-bg);}
+  #screen-item::after{display:none;}
+  #cart-bar{left:80px;bottom:0;padding:0;background:transparent;}
+  #cart-bar .cart-bar-inner{background:var(--green);}
+  #cart-bar .cart-bar-inner{width:min(100%,1200px);margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:22px 24px;}
+  .home-hero{height:480px;}
+  .hdr.over,.hdr{padding:16px;}
+  .greeting{top:120px;left:16px;right:16px;transform:none;text-align:left;font-size:40px;max-width:900px;}
+  .home-body{border-radius:0;margin-top:0;padding-bottom:120px;}
+  .section{padding:24px 16px 0;}
+  .order-again-scroll{padding:0 16px 16px;}
+  #venue-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;}
+  .venue-card{margin-bottom:0;}
+  .venue-hero{height:320px;}
+  .item-hero{height:360px;max-height:360px;}
+  .cart-body,.account-body{padding-left:24px;padding-right:24px;}
+  #search-overlay,#time-modal,#site-modal{left:80px;}
+  #toast{left:calc(50% + 40px);}
+}
+#cart-bar .cart-bar-inner{display:contents;}
+@media (min-width:900px){#cart-bar .cart-bar-inner{display:flex;}}
+
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- HOME -->
+<div id="screen-home" class="screen active">
+  <div class="home-hero">
+    <img id="hero-img" src="images/img_hero.png" alt="Boost SE Demo">
+    <div class="home-hero-overlay"></div>
+    <div class="hdr over">
+      <div style="display:flex;align-items:center;gap:10px;"><span class="wordmark light sm"><img src="images/boost-icon.png" alt=""><span class="wordmark-text">Boost</span></span><button class="site-link" onclick="openSiteModal()">SE Demo site <span>&#x203A;</span></button></div>
+      <div class="basket-wrap">
+        <button class="basket-btn" onclick="navigate('cart')">
+          <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        </button>
+        <div class="badge" id="home-badge" style="display:none">0</div>
+      </div>
+    </div>
+    <div class="greeting" id="greeting">Good morning. We are ready to take your order.</div>
+  </div>
+  <div class="home-body">
+    <div class="section">
+      <div class="signin-card">
+        <div class="signin-row">
+          <svg viewBox="0 0 56 48"><path d="M8 30h40l-4 14H12z"/><path d="M14 30V18a6 6 0 016-6h16a6 6 0 016 6v12"/><path d="M20 12V8a4 4 0 018 0v4"/><circle cx="36" cy="10" r="4"/><path d="M8 44h40"/></svg>
+          <div>Come and enjoy the full<br>Boost experience</div>
+        </div>
+        <button class="primary-btn full" onclick="showToast('Sign in is simulated in this demo')">Sign up or log in</button>
+      </div>
+    </div>
+    <div class="section"><div class="sec-title">What&#x2019;s new</div>
+      <div class="promo" onclick="showToast('Rewards: 20% off after every 3rd purchase')">
+        <div class="promo-title">Get 20% OFF after every 3rd purchase</div>
+        <div class="promo-sub">Exclusions may apply.</div>
+        <button class="promo-btn" onclick="event.stopPropagation();showToast('Rewards: 20% off after every 3rd purchase')">Learn How</button>
+        <div class="promo-blob"><span>Unlock</span><small>&#x2605; More &#x2605;</small><span>Rewards</span></div>
+      </div>
+    </div>
+    <div class="section"><div class="sec-title">Order Again</div></div>
+    <div class="order-again-scroll">
+      <div class="oa-card" onclick="navigateToVenue('grill')">
+        <div><div class="oa-venue">The Grill</div><div class="oa-item">classic hamburger</div></div>
+        <button class="add-circle" onclick="event.stopPropagation();quickAdd('grill')">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+      </div>
+      <div class="oa-card" onclick="navigateToVenue('deli')">
+        <div><div class="oa-venue">The Deli</div><div class="oa-item">turkey club sandwich</div></div>
+        <button class="add-circle" onclick="event.stopPropagation();quickAdd('deli')">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="section"><div class="sec-title">Explore your choices</div><div id="venue-list"></div></div>
+    <p class="allergy-text">Food Allergies? Please be advised that common allergens, including egg, milk, wheat, soy, sesame, peanuts, tree nuts, fish, and shellfish are present in our facility. The potential for cross-contact is higher at self-serve, fryer, and made-to-order stations. If you have a food allergy or special dietary need, please speak with a manager before making your selection.</p>
+  </div>
+</div>
+
+<!-- VENUE -->
+<div id="screen-venue" class="screen">
+  <div class="hdr" style="position:sticky;top:0;z-index:25;">
+    <button class="back-btn circle" onclick="goBack()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <div style="display:flex;gap:6px;align-items:center;">
+      <button class="icon-btn" onclick="openSearch()"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+      <div class="basket-wrap">
+        <button class="basket-btn" onclick="navigate('cart')"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></button>
+        <div class="badge" id="venue-badge" style="display:none">0</div>
+      </div>
+    </div>
+  </div>
+  <div class="venue-hero"><img id="venue-hero-img" src="" alt=""><div class="venue-hero-overlay"></div>
+    <div class="venue-hero-text"><div class="vh-name" id="venue-hero-name"></div><div class="vh-sub" id="venue-hero-sub"></div></div>
+  </div>
+  <div class="cat-tabs" id="cat-tabs"></div>
+  <div class="menu-body" id="menu-body"></div>
+</div>
+
+<!-- ITEM -->
+<div id="screen-item" class="screen">
+  <div class="hdr" style="position:absolute;top:0;width:100%;z-index:25;background:transparent;">
+    <button class="back-btn circle" onclick="goBack()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <div class="basket-wrap">
+      <button class="basket-btn solid" onclick="navigate('cart')"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></button>
+      <div class="badge on-solid" id="item-badge" style="display:none">0</div>
+    </div>
+  </div>
+  <div id="item-scroll-area">
+    <div class="item-hero"><img id="item-hero-img" src="" alt=""></div>
+    <div class="item-body" id="item-body"></div>
+  </div>
+  <div class="sticky-bot">
+    <div class="item-total-label">Item Total: <span id="item-total-val">$0.00</span></div>
+    <button class="primary-btn" onclick="addToOrder()">Add to order</button>
+  </div>
+</div>
+
+<!-- CART -->
+<div id="screen-cart" class="screen">
+  <div class="cart-hdr"><button class="close-btn" onclick="goBack()">&#x2715;</button></div>
+  <div class="cart-body" id="cart-body"></div>
+  <div class="sticky-bot"><button class="primary-btn full" onclick="placeOrder()">Place order</button></div>
+</div>
+
+<!-- PAYMENT -->
+<div id="screen-payment" class="screen">
+  <div class="hdr light"><button class="back-btn" onclick="goBack()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button><div></div></div>
+  <div class="pm-body">
+    <h1 style="font-size:24px;font-weight:700;margin-bottom:24px;color:var(--text);font-family:var(--font-heading);">Choose Payment Method</h1>
+    <div class="pm-sec">
+      <div class="pm-sec-title">Credit and debit cards</div>
+      <div class="pm-item" onclick="showToast('Card entry not available in demo')"><span class="pm-add"><span style="font-size:18px;">+</span> Add Credit or Debit Card</span></div>
+    </div>
+    <div class="pm-sec">
+      <div class="pm-sec-title">Employee cards</div>
+      <div class="pm-item" onclick="showToast('Employee card entry not available in demo')"><span class="pm-add"><span style="font-size:18px;">+</span> Add employee card</span></div>
+    </div>
+    <div class="pm-sec">
+      <div class="pm-sec-title">Vouchers</div>
+      <div class="pm-item" onclick="showToast('Voucher entry not available in demo')"><span class="pm-add"><span style="font-size:18px;">+</span> Add voucher</span></div>
+    </div>
+    <div class="pm-sec">
+      <div class="pm-sec-title">Digital wallet</div>
+      <div class="pm-item" onclick="selectPayment('Google Pay')"><span class="pm-name"><span class="gpay-badge">G Pay</span> Google Pay</span><span class="pm-check" id="gpay-check">&#x2713;</span></div>
+      <div class="pm-item" onclick="selectPayment('Apple Pay')"><span class="pm-name"><span style="font-size:16px;">&#x1F34E;</span> Apple Pay</span><span class="pm-check" id="apay-check" style="display:none">&#x2713;</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div id="screen-success" class="screen">
+  <div class="success-wrap">
+    <div class="success-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <div class="success-title">Order placed!</div>
+    <div class="success-sub" id="success-sub">Your order is being prepared.</div>
+    <div class="success-detail" id="success-detail"></div>
+    <button class="primary-btn full" style="margin-top:8px;" onclick="returnHome()">Back to Home</button>
+  </div>
+</div>
+
+<!-- ORDERS -->
+<div id="screen-orders" class="screen">
+  <div class="order-hdr">Orders</div>
+  <div id="orders-list"></div>
+</div>
+
+<!-- ACCOUNT -->
+<div id="screen-account" class="screen">
+  <div class="account-body">
+    <div class="acct-avatar">A</div>
+    <div class="acct-name">Alex Demo</div>
+    <div class="acct-email">alex.demo@example.com</div>
+    <div class="acct-row" onclick="showToast('Profile settings')"><span class="acct-row-label">Profile</span><span class="acct-row-right">Edit <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span></div>
+    <div class="acct-row" onclick="navigate('payment')"><span class="acct-row-label">Payment methods</span><span class="acct-row-right"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span></div>
+    <div class="acct-row" onclick="showToast('Notifications settings')"><span class="acct-row-label">Notifications</span><span class="acct-row-right"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span></div>
+    <div class="acct-row" onclick="showToast('Help & Support')"><span class="acct-row-label">Help &amp; Support</span><span class="acct-row-right"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span></div>
+  </div>
+</div>
+
+<!-- DESKTOP RAIL (≥900px) -->
+<nav id="side-rail">
+  <button class="rail-btn active" id="rail-home" onclick="switchTab('home')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</button>
+  <button class="rail-btn" id="rail-orders" onclick="switchTab('orders')"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Orders</button>
+  <button class="rail-btn" id="rail-account" onclick="switchTab('account')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Support</button>
+  <button class="rail-btn" onclick="showToast('Help center opens here')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Help</button>
+</nav>
+<div id="cart-bar" onclick="navigate('cart')"><div class="cart-bar-inner"><span>Ready to place your order?</span><b>Continue</b></div></div>
+
+<!-- NAV -->
+<nav id="bottom-nav">
+  <button class="nav-btn active" id="nav-home" onclick="switchTab('home')">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home
+  </button>
+  <button class="nav-btn" id="nav-orders" onclick="switchTab('orders')">
+    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Orders
+  </button>
+  <button class="nav-btn" id="nav-account" onclick="switchTab('account')">
+    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Account
+  </button>
+</nav>
+
+<button id="fab-scan" onclick="showToast('Point your camera at a QR code at the register')">
+  <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round"><rect x="3" y="3" width="5" height="5" rx="1"/><rect x="16" y="3" width="5" height="5" rx="1"/><rect x="3" y="16" width="5" height="5" rx="1"/><path d="M21 16h-3a2 2 0 00-2 2v3"/><line x1="21" y1="21" x2="21" y2="21"/><path d="M14 3v3"/><path d="M14 9v1"/></svg>
+  Scan &amp; Pay
+</button>
+
+<div id="search-overlay">
+  <div class="search-top">
+    <div class="search-input-wrap"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="search-input" placeholder="Search menu..." oninput="doSearch(this.value)" autocomplete="off"></div>
+    <button class="search-cancel" onclick="closeSearch()">Cancel</button>
+  </div>
+  <div class="search-results" id="search-results"><div class="search-empty">Start typing to search the menu</div></div>
+</div>
+
+<div id="time-modal" onclick="closeTimeModal()">
+  <div class="time-sheet" onclick="event.stopPropagation()">
+    <button class="sheet-close" onclick="closeTimeModal()">&#x2715;</button>
+    <h2>Choose pickup time</h2><div id="time-options"></div>
+  </div>
+</div>
+
+<div id="site-modal" onclick="closeSiteModal()">
+  <div class="site-sheet" onclick="event.stopPropagation()">
+    <button class="sheet-close" onclick="closeSiteModal()">&#x2715;</button>
+    <div style="margin-bottom:10px;"><span class="wordmark"><img src="images/boost-icon.png" alt=""><span class="wordmark-text">Boost</span></span></div>
+    <h2>SE Demo Site</h2>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:20px;">Boost Food Ordering &#x2014; Sales Engineering Demo</p>
+    <p style="font-size:12px;color:var(--muted);margin:-12px 0 20px;line-height:1.45;">Demonstration only. Menus, prices, accounts and payments are simulated; this site is not connected to the live Boost service.</p>
+    <div class="site-row" onclick="closeSiteModal()">
+      <div><div class="site-row-name">SE Demo Site</div><div class="site-row-desc">Corporate campus &#x2022; Building 1 &amp; Main Building</div></div>
+      <span style="color:var(--green-2);font-size:18px;">&#x2713;</span>
+    </div>
+    <div class="site-row" onclick="showToast('Demo only');closeSiteModal()">
+      <div><div class="site-row-name">Riverside Campus</div><div class="site-row-desc">Demo environment</div></div>
+      <span style="color:var(--muted);">&#x203A;</span>
+    </div>
+    <div class="site-row" onclick="showToast('Demo only');closeSiteModal()">
+      <div><div class="site-row-name">Harbor Center Guest</div><div class="site-row-desc">Demo environment</div></div>
+      <span style="color:var(--muted);">&#x203A;</span>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+</div>
+
+<script>
+
+// ── VENUES ──
+const VENUES = [
+  {id:'grill',name:'The Grill',location:'Building 1',status:'Open 24 Hours',readyTime:'11:45 am',pickupHours:'11:00 am – 8:00 pm',heroImg:'images/img_grill_hero.jpg',cardImg:'images/img_grill_card.jpg'},
+  {id:'deli',name:'The Deli',location:'Building 1',status:'Open 24 Hours',readyTime:'12:00 pm',pickupHours:'7:00 am – 3:00 pm',heroImg:'images/img_deli_hero.jpg',cardImg:'images/img_deli_card.jpg'},
+  {id:'coffee',name:'The Coffee Bar',location:'Main Building',status:'Open 24 Hours',readyTime:'11:40 am',pickupHours:'6:30 am – 6:00 pm',heroImg:'images/img_coffee_hero.jpg',cardImg:'images/img_coffee_card.jpg'},
+];
+
+// ── MENU ──
+const MENU = {
+  grill:[
+    {id:'sandwiches',name:'SIGNATURE SANDWICHES',items:[
+      {id:'classic-hamburger',name:'classic hamburger',kcal:430,desc:'classic hand formed beef burger topped with lettuce blend, tomato, onion and pickles on a brioche bun',price:7.00,img:'images/img_grill_card.jpg',heroImg:'images/img_grill_card.jpg',modGroups:[{id:'customize',title:'CUSTOMIZE CLASSIC HAMBURGER – Choose as many as you like',optional:true,mods:[{id:'lettuce-wrap',name:'substitute lettuce wrap',price:0,cals:5},{id:'gf-bun',name:'substitute gluten free bun',price:0,cals:240},{id:'am-cheese',name:'add american cheese',price:0.50,cals:50},{id:'ched-cheese',name:'add cheddar cheese',price:0.50,cals:90},{id:'pepper-cheese',name:'add pepperjack cheese',price:0.50,cals:80},{id:'prov-cheese',name:'add provolone cheese',price:0.50,cals:80},{id:'bacon',name:'add bacon',price:1.00,cals:270},{id:'avocado',name:'add avocado',price:1.00,cals:70},{id:'fried-egg',name:'add a fried egg',price:1.00,cals:100},{id:'no-tomato',name:'no tomato',price:0,cals:null},{id:'extra-tomato',name:'extra tomato',price:0,cals:5},{id:'no-onion',name:'no onion',price:0,cals:null},{id:'extra-onion',name:'extra onion',price:0,cals:10},{id:'no-pickle',name:'no pickle',price:0,cals:null},{id:'extra-pickles',name:'extra pickles',price:0,cals:5},{id:'no-lettuce',name:'no lettuce',price:0,cals:null},{id:'extra-lettuce',name:'extra lettuce',price:0,cals:5}]},{id:'sides',title:'ADD A SIDE – Choose as many as you like',optional:true,mods:[{id:'hand-fries',name:'hand cut fries',price:2.00,cals:190},{id:'sweet-fries',name:'sweet potato fries',price:2.00,cals:260},{id:'onion-rings',name:'onion rings',price:2.00,cals:370},{id:'grilled-veg',name:'grilled vegetables',price:2.00,cals:40}]}]},
+      {id:'bacon-cheeseburger',name:'all american bacon cheeseburger',kcal:790,desc:'cheeseburger with provolone, american, candied bacon, tomato, onion, pickles, lettuce blend and ranch dressing on a brioche bun',price:10.00,img:'images/food_bacon_burger.jpg',heroImg:'images/food_bacon_burger.jpg',modGroups:[{id:'customize',title:'CUSTOMIZE BACON CHEESEBURGER – Choose as many as you like',optional:true,mods:[{id:'lettuce-wrap',name:'substitute lettuce wrap',price:0,cals:5},{id:'gf-bun',name:'substitute gluten free bun',price:0,cals:240},{id:'ched-cheese',name:'add cheddar cheese',price:0.50,cals:90},{id:'pepper-cheese',name:'add pepperjack cheese',price:0.50,cals:80},{id:'extra-bacon',name:'extra bacon',price:1.50,cals:270},{id:'avocado',name:'add avocado',price:1.00,cals:70},{id:'fried-egg',name:'add a fried egg',price:1.00,cals:100},{id:'no-provolone',name:'no provolone',price:0,cals:null},{id:'no-american',name:'no american cheese',price:0,cals:null},{id:'no-bacon',name:'no bacon',price:0,cals:null},{id:'no-ranch',name:'no ranch dressing',price:0,cals:null},{id:'no-tomato',name:'no tomato',price:0,cals:null},{id:'extra-tomato',name:'extra tomato',price:0,cals:5},{id:'no-onion',name:'no onion',price:0,cals:null},{id:'extra-onion',name:'extra onion',price:0,cals:10},{id:'no-pickle',name:'no pickle',price:0,cals:null},{id:'extra-pickles',name:'extra pickles',price:0,cals:5},{id:'no-lettuce',name:'no lettuce',price:0,cals:null},{id:'extra-lettuce',name:'extra lettuce',price:0,cals:5}]},{id:'sides',title:'ADD A SIDE – Choose as many as you like',optional:true,mods:[{id:'hand-fries',name:'hand cut fries',price:2.00,cals:190},{id:'sweet-fries',name:'sweet potato fries',price:2.00,cals:260},{id:'onion-rings',name:'onion rings',price:2.00,cals:370},{id:'grilled-veg',name:'grilled vegetables',price:2.00,cals:40}]}]},
+      {id:'black-bean-burger',name:'black bean burger',kcal:310,desc:'black bean burger topped with lettuce blend, onion and tomato on a brioche bun',price:7.50,img:'images/food_black_bean.jpg',heroImg:'images/food_black_bean.jpg',modGroups:[{id:'customize',title:'CUSTOMIZE BLACK BEAN BURGER – Choose as many as you like',optional:true,mods:[{id:'lettuce-wrap',name:'substitute lettuce wrap',price:0,cals:5},{id:'gf-bun',name:'substitute gluten free bun',price:0,cals:240},{id:'am-cheese',name:'add american cheese',price:0.50,cals:50},{id:'ched-cheese',name:'add cheddar cheese',price:0.50,cals:90},{id:'pepper-cheese',name:'add pepperjack cheese',price:0.50,cals:80},{id:'prov-cheese',name:'add provolone cheese',price:0.50,cals:80},{id:'bacon',name:'add bacon',price:1.00,cals:270},{id:'avocado',name:'add avocado',price:1.00,cals:70},{id:'fried-egg',name:'add a fried egg',price:1.00,cals:100},{id:'no-lettuce',name:'no lettuce',price:0,cals:null},{id:'extra-lettuce',name:'extra lettuce',price:0,cals:5},{id:'no-onion',name:'no onion',price:0,cals:null},{id:'extra-onion',name:'extra onion',price:0,cals:10},{id:'no-tomato',name:'no tomato',price:0,cals:null},{id:'extra-tomato',name:'extra tomato',price:0,cals:5}]},{id:'sides',title:'ADD A SIDE – Choose as many as you like',optional:true,mods:[{id:'hand-fries',name:'hand cut fries',price:2.00,cals:190},{id:'sweet-fries',name:'sweet potato fries',price:2.00,cals:260},{id:'onion-rings',name:'onion rings',price:2.00,cals:370},{id:'grilled-veg',name:'grilled vegetables',price:2.00,cals:40}]}]},
+      {id:'spicy-avocado-bb',name:'spicy avocado black bean burger',kcal:620,desc:'black bean burger topped with sliced avocado, chipotle aioli, lettuce, onion and tomato on a whole wheat bun',price:9.00,img:'images/food_spicy_avocado.jpg',heroImg:'images/food_spicy_avocado.jpg',modGroups:[{id:'customize',title:'CUSTOMIZE SPICY AVOCADO BURGER – Choose as many as you like',optional:true,mods:[{id:'lettuce-wrap',name:'substitute lettuce wrap',price:0,cals:5},{id:'am-cheese',name:'add american cheese',price:0.50,cals:50},{id:'ched-cheese',name:'add cheddar cheese',price:0.50,cals:90},{id:'pepper-cheese',name:'add pepperjack cheese',price:0.50,cals:80},{id:'prov-cheese',name:'add provolone cheese',price:0.50,cals:80},{id:'extra-avocado',name:'extra avocado',price:1.00,cals:70},{id:'bacon',name:'add bacon',price:1.00,cals:270},{id:'fried-egg',name:'add a fried egg',price:1.00,cals:100},{id:'no-avocado',name:'no avocado',price:0,cals:null},{id:'no-aioli',name:'no chipotle aioli',price:0,cals:null},{id:'no-lettuce',name:'no lettuce',price:0,cals:null},{id:'extra-lettuce',name:'extra lettuce',price:0,cals:5},{id:'no-onion',name:'no onion',price:0,cals:null},{id:'extra-onion',name:'extra onion',price:0,cals:10},{id:'no-tomato',name:'no tomato',price:0,cals:null},{id:'extra-tomato',name:'extra tomato',price:0,cals:5}]},{id:'sides',title:'ADD A SIDE – Choose as many as you like',optional:true,mods:[{id:'hand-fries',name:'hand cut fries',price:2.00,cals:190},{id:'sweet-fries',name:'sweet potato fries',price:2.00,cals:260},{id:'onion-rings',name:'onion rings',price:2.00,cals:370},{id:'grilled-veg',name:'grilled vegetables',price:2.00,cals:40}]}]},
+      {id:'turkey-burger',name:'signature turkey burger',kcal:420,desc:'turkey burger with lettuce, tomato, onion and pickles on a brioche bun',price:7.00,img:'images/food_turkey_burger.jpg',heroImg:'images/food_turkey_burger.jpg',modGroups:[{id:'customize',title:'CUSTOMIZE TURKEY BURGER – Choose as many as you like',optional:true,mods:[{id:'lettuce-wrap',name:'substitute lettuce wrap',price:0,cals:5},{id:'gf-bun',name:'substitute gluten free bun',price:0,cals:240},{id:'am-cheese',name:'add american cheese',price:0.50,cals:50},{id:'ched-cheese',name:'add cheddar cheese',price:0.50,cals:90},{id:'pepper-cheese',name:'add pepperjack cheese',price:0.50,cals:80},{id:'prov-cheese',name:'add provolone cheese',price:0.50,cals:80},{id:'bacon',name:'add bacon',price:1.00,cals:270},{id:'avocado',name:'add avocado',price:1.00,cals:70},{id:'fried-egg',name:'add a fried egg',price:1.00,cals:100},{id:'no-lettuce',name:'no lettuce',price:0,cals:null},{id:'extra-lettuce',name:'extra lettuce',price:0,cals:5},{id:'no-tomato',name:'no tomato',price:0,cals:null},{id:'extra-tomato',name:'extra tomato',price:0,cals:5},{id:'no-onion',name:'no onion',price:0,cals:null},{id:'extra-onion',name:'extra onion',price:0,cals:10},{id:'no-pickle',name:'no pickle',price:0,cals:null},{id:'extra-pickles',name:'extra pickles',price:0,cals:5}]},{id:'sides',title:'ADD A SIDE – Choose as many as you like',optional:true,mods:[{id:'hand-fries',name:'hand cut fries',price:2.00,cals:190},{id:'sweet-fries',name:'sweet potato fries',price:2.00,cals:260},{id:'onion-rings',name:'onion rings',price:2.00,cals:370},{id:'grilled-veg',name:'grilled vegetables',price:2.00,cals:40}]}]},
+      {id:'sweet-chili-turkey',name:'sweet chili turkey burger',kcal:610,desc:'turkey burger topped with a cilantro citrus slaw and sweet chili aioli on a whole wheat bun',price:9.00,img:'images/food_sweet_chili.jpg',heroImg:'images/food_sweet_chili.jpg',modGroups:[{id:'customize',title:'CUSTOMIZE SWEET CHILI TURKEY – Choose as many as you like',optional:true,mods:[{id:'lettuce-wrap',name:'substitute lettuce wrap',price:0,cals:5},{id:'am-cheese',name:'add american cheese',price:0.50,cals:50},{id:'ched-cheese',name:'add cheddar cheese',price:0.50,cals:90},{id:'pepper-cheese',name:'add pepperjack cheese',price:0.50,cals:80},{id:'prov-cheese',name:'add provolone cheese',price:0.50,cals:80},{id:'bacon',name:'add bacon',price:1.00,cals:270},{id:'avocado',name:'add avocado',price:1.00,cals:70},{id:'fried-egg',name:'add a fried egg',price:1.00,cals:100},{id:'no-slaw',name:'no cilantro citrus slaw',price:0,cals:null},{id:'extra-slaw',name:'extra slaw',price:0,cals:15},{id:'no-aioli',name:'no sweet chili aioli',price:0,cals:null}]},{id:'sides',title:'ADD A SIDE – Choose as many as you like',optional:true,mods:[{id:'hand-fries',name:'hand cut fries',price:2.00,cals:190},{id:'sweet-fries',name:'sweet potato fries',price:2.00,cals:260},{id:'onion-rings',name:'onion rings',price:2.00,cals:370},{id:'grilled-veg',name:'grilled vegetables',price:2.00,cals:40}]}]},
+      {id:'chicken-sandwich',name:'grilled chicken sandwich',kcal:350,desc:'grilled chicken sandwich topped with lettuce blend, tomato and onion on a brioche bun',price:7.00,img:'images/food_chicken_sandwich.jpg',heroImg:'images/food_chicken_sandwich.jpg',modGroups:[{id:'customize',title:'CUSTOMIZE CHICKEN SANDWICH – Choose as many as you like',optional:true,mods:[{id:'lettuce-wrap',name:'substitute lettuce wrap',price:0,cals:5},{id:'gf-bun',name:'substitute gluten free bun',price:0,cals:240},{id:'am-cheese',name:'add american cheese',price:0.50,cals:50},{id:'ched-cheese',name:'add cheddar cheese',price:0.50,cals:90},{id:'pepper-cheese',name:'add pepperjack cheese',price:0.50,cals:80},{id:'prov-cheese',name:'add provolone cheese',price:0.50,cals:80},{id:'bacon',name:'add bacon',price:1.00,cals:270},{id:'avocado',name:'add avocado',price:1.00,cals:70},{id:'fried-egg',name:'add a fried egg',price:1.00,cals:100},{id:'no-lettuce',name:'no lettuce',price:0,cals:null},{id:'extra-lettuce',name:'extra lettuce',price:0,cals:5},{id:'no-tomato',name:'no tomato',price:0,cals:null},{id:'extra-tomato',name:'extra tomato',price:0,cals:5},{id:'no-onion',name:'no onion',price:0,cals:null},{id:'extra-onion',name:'extra onion',price:0,cals:10}]},{id:'sides',title:'ADD A SIDE – Choose as many as you like',optional:true,mods:[{id:'hand-fries',name:'hand cut fries',price:2.00,cals:190},{id:'sweet-fries',name:'sweet potato fries',price:2.00,cals:260},{id:'onion-rings',name:'onion rings',price:2.00,cals:370},{id:'grilled-veg',name:'grilled vegetables',price:2.00,cals:40}]}]},
+    ]},
+    {id:'beverages',name:'BEVERAGES',items:[
+      {id:'coke-20',name:'coca cola classic 20oz',kcal:null,desc:'Ice cold Coca-Cola Classic 20oz bottle',price:1.00,img:'images/food_coke.jpg',heroImg:'images/food_coke.jpg',isBev:true,modGroups:[]},
+      {id:'coke-12',name:'coca cola classic 12oz',kcal:null,desc:'Ice cold Coca-Cola Classic 12oz can',price:1.00,img:'images/food_coke.jpg',heroImg:'images/food_coke.jpg',isBev:true,modGroups:[]},
+      {id:'sbux-mocha',name:'starbucks frappuccino mocha 13.7oz',kcal:290,desc:'Mocha flavored Starbucks Frappuccino',price:4.25,img:'images/food_sbux_mocha.jpg',heroImg:'images/food_latte.jpg',isBev:true,modGroups:[]},
+      {id:'sbux-vanilla',name:'starbucks frappuccino vanilla 13.7oz',kcal:270,desc:'Vanilla flavored Starbucks Frappuccino',price:4.25,img:'images/food_sbux_mocha.jpg',heroImg:'images/food_latte.jpg',isBev:true,modGroups:[]},
+      {id:'aw-root',name:'a&w root beer 20oz',kcal:null,desc:'Classic A&W Root Beer 20oz bottle',price:2.00,img:'images/food_aw.jpg',heroImg:'images/food_aw.jpg',isBev:true,modGroups:[]},
+      {id:'canada-dry',name:'canada dry ginger ale 20oz',kcal:null,desc:'Canada Dry Ginger Ale 20oz bottle',price:2.00,img:'images/food_coke.jpg',heroImg:'images/food_coke.jpg',isBev:true,modGroups:[]},
+    ]},
+  ],
+  deli:[
+    {id:'deli-subs',name:'SIGNATURE SUBS',items:[
+      {id:'turkey-club',name:'turkey club sandwich',kcal:520,desc:'Sliced turkey, bacon, swiss cheese, lettuce, tomato and honey mustard on toasted sourdough',price:9.50,img:'images/food_turkey_club.jpg',heroImg:'images/food_turkey_club.jpg',modGroups:[{id:'customize',title:'CUSTOMIZE TURKEY CLUB – Choose as many as you like',optional:true,mods:[{id:'extra-turkey',name:'extra turkey',price:1.50,cals:60},{id:'am-cheese',name:'add american cheese',price:0.50,cals:50},{id:'ched-cheese',name:'add cheddar cheese',price:0.50,cals:90},{id:'avocado',name:'add avocado',price:1.00,cals:70},{id:'no-bacon',name:'no bacon',price:0,cals:null},{id:'extra-bacon',name:'extra bacon',price:1.50,cals:270},{id:'no-swiss',name:'no swiss cheese',price:0,cals:null},{id:'no-lettuce',name:'no lettuce',price:0,cals:null},{id:'extra-lettuce',name:'extra lettuce',price:0,cals:5},{id:'no-tomato',name:'no tomato',price:0,cals:null},{id:'extra-tomato',name:'extra tomato',price:0,cals:5},{id:'no-mustard',name:'no honey mustard',price:0,cals:null}]}]},
+      {id:'italian-sub',name:'italian sub',kcal:680,desc:'Salami, pepperoni, ham, provolone, pepperoncini, lettuce, tomato and Italian dressing on a hoagie roll',price:9.00,img:'images/food_italian_sub.jpg',heroImg:'images/food_italian_sub.jpg',modGroups:[{id:'customize',title:'CUSTOMIZE ITALIAN SUB – Choose as many as you like',optional:true,mods:[{id:'extra-salami',name:'extra salami',price:1.00,cals:80},{id:'extra-pepperoni',name:'extra pepperoni',price:1.00,cals:80},{id:'extra-ham',name:'extra ham',price:1.00,cals:50},{id:'extra-prov',name:'extra provolone',price:0.50,cals:80},{id:'no-salami',name:'no salami',price:0,cals:null},{id:'no-pepperoni',name:'no pepperoni',price:0,cals:null},{id:'no-ham',name:'no ham',price:0,cals:null},{id:'no-provolone',name:'no provolone',price:0,cals:null},{id:'no-pepperoncini',name:'no pepperoncini',price:0,cals:null},{id:'no-lettuce',name:'no lettuce',price:0,cals:null},{id:'extra-lettuce',name:'extra lettuce',price:0,cals:5},{id:'no-tomato',name:'no tomato',price:0,cals:null},{id:'extra-tomato',name:'extra tomato',price:0,cals:5},{id:'no-dressing',name:'no Italian dressing',price:0,cals:null}]}]},
+      {id:'veggie-wrap',name:'fresh veggie wrap',kcal:340,desc:'Hummus, cucumber, roasted red pepper, spinach, carrots and feta in a whole wheat wrap',price:8.00,img:'images/food_veggie_wrap.jpg',heroImg:'images/food_veggie_wrap.jpg',modGroups:[{id:'customize',title:'CUSTOMIZE VEGGIE WRAP – Choose as many as you like',optional:true,mods:[{id:'extra-hummus',name:'extra hummus',price:0.50,cals:50},{id:'extra-feta',name:'extra feta',price:0.50,cals:75},{id:'avocado',name:'add avocado',price:1.00,cals:70},{id:'no-hummus',name:'no hummus',price:0,cals:null},{id:'no-cucumber',name:'no cucumber',price:0,cals:null},{id:'extra-cucumber',name:'extra cucumber',price:0,cals:5},{id:'no-red-pepper',name:'no roasted red pepper',price:0,cals:null},{id:'extra-red-pepper',name:'extra roasted red pepper',price:0,cals:10},{id:'no-spinach',name:'no spinach',price:0,cals:null},{id:'extra-spinach',name:'extra spinach',price:0,cals:5},{id:'no-carrots',name:'no carrots',price:0,cals:null},{id:'no-feta',name:'no feta',price:0,cals:null}]}]},
+      {id:'roast-beef',name:'roast beef & cheddar',kcal:590,desc:'Thinly sliced roast beef, cheddar, horseradish aioli, lettuce and tomato on a pretzel roll',price:10.00,img:'images/food_roast_beef.jpg',heroImg:'images/food_roast_beef.jpg',modGroups:[{id:'customize',title:'CUSTOMIZE ROAST BEEF & CHEDDAR – Choose as many as you like',optional:true,mods:[{id:'extra-beef',name:'extra roast beef',price:2.00,cals:90},{id:'am-cheese',name:'add american cheese',price:0.50,cals:50},{id:'pepper-cheese',name:'add pepperjack cheese',price:0.50,cals:80},{id:'no-cheddar',name:'no cheddar',price:0,cals:null},{id:'no-aioli',name:'no horseradish aioli',price:0,cals:null},{id:'no-lettuce',name:'no lettuce',price:0,cals:null},{id:'extra-lettuce',name:'extra lettuce',price:0,cals:5},{id:'no-tomato',name:'no tomato',price:0,cals:null},{id:'extra-tomato',name:'extra tomato',price:0,cals:5}]}]},
+    ]},
+    {id:'deli-sides',name:'SIDES & SOUPS',items:[
+      {id:'soup-tomato',name:'tomato basil soup',kcal:220,desc:'Creamy tomato basil soup served with a breadstick',price:5.00,img:'images/food_soup.jpg',heroImg:'images/food_soup.jpg',modGroups:[]},
+      {id:'side-salad',name:'garden side salad',kcal:90,desc:'Mixed greens, cherry tomatoes, cucumber with choice of dressing',price:3.50,img:'images/food_salad.jpg',heroImg:'images/food_salad.jpg',modGroups:[]},
+      {id:'chips',name:'kettle chips',kcal:160,desc:'House-made kettle cooked potato chips',price:2.00,img:'images/food_chips.jpg',heroImg:'images/food_chips.jpg',modGroups:[]},
+    ]},
+  ],
+  coffee:[
+    {id:'espresso-cat',name:'ESPRESSO',items:[
+      {id:'espresso',name:'Espresso',kcal:null,desc:'Rich and bold shot of coffee with a layer of crema on top',price:3.65,img:'images/food_espresso.jpg',heroImg:'images/img_coffee_hero.jpg',modGroups:[{id:'shots',title:'Espresso Shots - Choose 1',optional:false,mods:[{id:'single',name:'Single',price:0,cals:null},{id:'double',name:'Double',price:0.30,cals:null},{id:'triple',name:'Triple',price:0.60,cals:null},{id:'quad',name:'Quad',price:0.90,cals:null}]},{id:'style',title:'Espresso Style - Choose 1',optional:false,mods:[{id:'signature',name:'Signature Espresso',price:0,cals:null},{id:'decaf',name:'Decaf Espresso',price:0,cals:null}]},{id:'creamer',title:'Add Creamer - Choose up to 1',optional:true,mods:[{id:'nonfat',name:'Nonfat Milk',price:0.25,cals:null},{id:'twopct',name:'2% Milk',price:0.25,cals:null},{id:'whole',name:'Whole Milk',price:0.25,cals:null},{id:'halfhalf',name:'Half & Half',price:0.25,cals:null},{id:'heavy',name:'Heavy Cream',price:0.25,cals:null},{id:'almond',name:'Almond Milk',price:0.25,cals:null},{id:'soy',name:'Soy Milk',price:0.25,cals:null},{id:'oat',name:'Oat Milk',price:0.25,cals:null}]},{id:'syrup',title:'Add Syrup - Choose as many as you like',optional:true,mods:[{id:'vanilla-s',name:'Vanilla Syrup',price:0.25,cals:null},{id:'sf-vanilla',name:'Sugar-Free Vanilla Syrup',price:0.25,cals:null},{id:'caramel-s',name:'Caramel Syrup',price:0.25,cals:null}]},{id:'sauce',title:'Add Sauce - Choose as many as you like',optional:true,mods:[{id:'choc-sauce',name:'Chocolate Sauce',price:0.50,cals:null},{id:'wchoc-sauce',name:'White Chocolate Sauce',price:0.50,cals:null}]},{id:'sweet',title:'Sweeteners - Choose as many as you like',optional:true,mods:[{id:'sugar',name:'Sugar',price:0,cals:null},{id:'raw-sugar',name:'Raw Sugar',price:0,cals:null},{id:'splenda',name:'Splenda',price:0,cals:null},{id:'stevia',name:'Stevia',price:0,cals:null},{id:'honey',name:'Honey',price:0,cals:null}]}]},
+      {id:'latte',name:'Latte',kcal:null,desc:'Espresso and steamed milk with a light layer of foam on top',price:5.45,img:'images/food_latte.jpg',heroImg:'images/img_coffee_hero.jpg',modGroups:[{id:'shots',title:'Espresso Shots - Choose 1',optional:false,mods:[{id:'single',name:'Single',price:0,cals:null},{id:'double',name:'Double',price:0.30,cals:null},{id:'triple',name:'Triple',price:0.60,cals:null},{id:'quad',name:'Quad',price:0.90,cals:null}]},{id:'style',title:'Espresso Style - Choose 1',optional:false,mods:[{id:'signature',name:'Signature Espresso',price:0,cals:null},{id:'decaf',name:'Decaf Espresso',price:0,cals:null}]},{id:'creamer',title:'Add Creamer - Choose up to 1',optional:true,mods:[{id:'nonfat',name:'Nonfat Milk',price:0.25,cals:null},{id:'twopct',name:'2% Milk',price:0.25,cals:null},{id:'whole',name:'Whole Milk',price:0.25,cals:null},{id:'halfhalf',name:'Half & Half',price:0.25,cals:null},{id:'heavy',name:'Heavy Cream',price:0.25,cals:null},{id:'almond',name:'Almond Milk',price:0.25,cals:null},{id:'soy',name:'Soy Milk',price:0.25,cals:null},{id:'oat',name:'Oat Milk',price:0.25,cals:null}]},{id:'syrup',title:'Add Syrup - Choose as many as you like',optional:true,mods:[{id:'vanilla-s',name:'Vanilla Syrup',price:0.25,cals:null},{id:'sf-vanilla',name:'Sugar-Free Vanilla Syrup',price:0.25,cals:null},{id:'caramel-s',name:'Caramel Syrup',price:0.25,cals:null}]},{id:'sauce',title:'Add Sauce - Choose as many as you like',optional:true,mods:[{id:'choc-sauce',name:'Chocolate Sauce',price:0.50,cals:null},{id:'wchoc-sauce',name:'White Chocolate Sauce',price:0.50,cals:null}]},{id:'sweet',title:'Sweeteners - Choose as many as you like',optional:true,mods:[{id:'sugar',name:'Sugar',price:0,cals:null},{id:'raw-sugar',name:'Raw Sugar',price:0,cals:null},{id:'splenda',name:'Splenda',price:0,cals:null},{id:'stevia',name:'Stevia',price:0,cals:null},{id:'honey',name:'Honey',price:0,cals:null}]}]},
+      {id:'americano',name:'Americano',kcal:null,desc:'Rich, bold espresso and hot water',price:4.75,img:'images/food_americano.jpg',heroImg:'images/img_coffee_hero.jpg',modGroups:[{id:'shots',title:'Espresso Shots - Choose 1',optional:false,mods:[{id:'single',name:'Single',price:0,cals:null},{id:'double',name:'Double',price:0.30,cals:null},{id:'triple',name:'Triple',price:0.60,cals:null},{id:'quad',name:'Quad',price:0.90,cals:null}]},{id:'style',title:'Espresso Style - Choose 1',optional:false,mods:[{id:'signature',name:'Signature Espresso',price:0,cals:null},{id:'decaf',name:'Decaf Espresso',price:0,cals:null}]},{id:'creamer',title:'Add Creamer - Choose up to 1',optional:true,mods:[{id:'nonfat',name:'Nonfat Milk',price:0.25,cals:null},{id:'twopct',name:'2% Milk',price:0.25,cals:null},{id:'whole',name:'Whole Milk',price:0.25,cals:null},{id:'halfhalf',name:'Half & Half',price:0.25,cals:null},{id:'heavy',name:'Heavy Cream',price:0.25,cals:null},{id:'almond',name:'Almond Milk',price:0.25,cals:null},{id:'soy',name:'Soy Milk',price:0.25,cals:null},{id:'oat',name:'Oat Milk',price:0.25,cals:null}]},{id:'syrup',title:'Add Syrup - Choose as many as you like',optional:true,mods:[{id:'vanilla-s',name:'Vanilla Syrup',price:0.25,cals:null},{id:'sf-vanilla',name:'Sugar-Free Vanilla Syrup',price:0.25,cals:null},{id:'caramel-s',name:'Caramel Syrup',price:0.25,cals:null}]},{id:'sauce',title:'Add Sauce - Choose as many as you like',optional:true,mods:[{id:'choc-sauce',name:'Chocolate Sauce',price:0.50,cals:null},{id:'wchoc-sauce',name:'White Chocolate Sauce',price:0.50,cals:null}]},{id:'sweet',title:'Sweeteners - Choose as many as you like',optional:true,mods:[{id:'sugar',name:'Sugar',price:0,cals:null},{id:'raw-sugar',name:'Raw Sugar',price:0,cals:null},{id:'splenda',name:'Splenda',price:0,cals:null},{id:'stevia',name:'Stevia',price:0,cals:null},{id:'honey',name:'Honey',price:0,cals:null}]}]},
+      {id:'cappuccino',name:'Cappuccino',kcal:null,desc:'Espresso and steamed milk with a thick layer of milk foam',price:5.45,img:'images/food_cappuccino.jpg',heroImg:'images/img_coffee_hero.jpg',modGroups:[{id:'shots',title:'Espresso Shots - Choose 1',optional:false,mods:[{id:'single',name:'Single',price:0,cals:null},{id:'double',name:'Double',price:0.30,cals:null},{id:'triple',name:'Triple',price:0.60,cals:null},{id:'quad',name:'Quad',price:0.90,cals:null}]},{id:'style',title:'Espresso Style - Choose 1',optional:false,mods:[{id:'signature',name:'Signature Espresso',price:0,cals:null},{id:'decaf',name:'Decaf Espresso',price:0,cals:null}]},{id:'creamer',title:'Add Creamer - Choose up to 1',optional:true,mods:[{id:'nonfat',name:'Nonfat Milk',price:0.25,cals:null},{id:'twopct',name:'2% Milk',price:0.25,cals:null},{id:'whole',name:'Whole Milk',price:0.25,cals:null},{id:'halfhalf',name:'Half & Half',price:0.25,cals:null},{id:'heavy',name:'Heavy Cream',price:0.25,cals:null},{id:'almond',name:'Almond Milk',price:0.25,cals:null},{id:'soy',name:'Soy Milk',price:0.25,cals:null},{id:'oat',name:'Oat Milk',price:0.25,cals:null}]},{id:'syrup',title:'Add Syrup - Choose as many as you like',optional:true,mods:[{id:'vanilla-s',name:'Vanilla Syrup',price:0.25,cals:null},{id:'sf-vanilla',name:'Sugar-Free Vanilla Syrup',price:0.25,cals:null},{id:'caramel-s',name:'Caramel Syrup',price:0.25,cals:null}]},{id:'sauce',title:'Add Sauce - Choose as many as you like',optional:true,mods:[{id:'choc-sauce',name:'Chocolate Sauce',price:0.50,cals:null},{id:'wchoc-sauce',name:'White Chocolate Sauce',price:0.50,cals:null}]},{id:'sweet',title:'Sweeteners - Choose as many as you like',optional:true,mods:[{id:'sugar',name:'Sugar',price:0,cals:null},{id:'raw-sugar',name:'Raw Sugar',price:0,cals:null},{id:'splenda',name:'Splenda',price:0,cals:null},{id:'stevia',name:'Stevia',price:0,cals:null},{id:'honey',name:'Honey',price:0,cals:null}]}]},
+      {id:'macchiato',name:'Macchiato',kcal:null,desc:'Rich, bold espresso with a small dollop of milk foam',price:3.75,img:'images/food_macchiato.jpg',heroImg:'images/img_coffee_hero.jpg',modGroups:[{id:'shots',title:'Espresso Shots - Choose 1',optional:false,mods:[{id:'single',name:'Single',price:0,cals:null},{id:'double',name:'Double',price:0.30,cals:null},{id:'triple',name:'Triple',price:0.60,cals:null},{id:'quad',name:'Quad',price:0.90,cals:null}]},{id:'style',title:'Espresso Style - Choose 1',optional:false,mods:[{id:'signature',name:'Signature Espresso',price:0,cals:null},{id:'decaf',name:'Decaf Espresso',price:0,cals:null}]},{id:'creamer',title:'Add Creamer - Choose up to 1',optional:true,mods:[{id:'nonfat',name:'Nonfat Milk',price:0.25,cals:null},{id:'twopct',name:'2% Milk',price:0.25,cals:null},{id:'whole',name:'Whole Milk',price:0.25,cals:null},{id:'halfhalf',name:'Half & Half',price:0.25,cals:null},{id:'heavy',name:'Heavy Cream',price:0.25,cals:null},{id:'almond',name:'Almond Milk',price:0.25,cals:null},{id:'soy',name:'Soy Milk',price:0.25,cals:null},{id:'oat',name:'Oat Milk',price:0.25,cals:null}]},{id:'syrup',title:'Add Syrup - Choose as many as you like',optional:true,mods:[{id:'vanilla-s',name:'Vanilla Syrup',price:0.25,cals:null},{id:'sf-vanilla',name:'Sugar-Free Vanilla Syrup',price:0.25,cals:null},{id:'caramel-s',name:'Caramel Syrup',price:0.25,cals:null}]},{id:'sauce',title:'Add Sauce - Choose as many as you like',optional:true,mods:[{id:'choc-sauce',name:'Chocolate Sauce',price:0.50,cals:null},{id:'wchoc-sauce',name:'White Chocolate Sauce',price:0.50,cals:null}]},{id:'sweet',title:'Sweeteners - Choose as many as you like',optional:true,mods:[{id:'sugar',name:'Sugar',price:0,cals:null},{id:'raw-sugar',name:'Raw Sugar',price:0,cals:null},{id:'splenda',name:'Splenda',price:0,cals:null},{id:'stevia',name:'Stevia',price:0,cals:null},{id:'honey',name:'Honey',price:0,cals:null}]}]},
+      {id:'mocha',name:'Mocha',kcal:null,desc:'Espresso combined with chocolate sauce and steamed milk',price:5.85,img:'images/food_mocha.jpg',heroImg:'images/img_coffee_hero.jpg',modGroups:[{id:'shots',title:'Espresso Shots - Choose 1',optional:false,mods:[{id:'single',name:'Single',price:0,cals:null},{id:'double',name:'Double',price:0.30,cals:null},{id:'triple',name:'Triple',price:0.60,cals:null},{id:'quad',name:'Quad',price:0.90,cals:null}]},{id:'style',title:'Espresso Style - Choose 1',optional:false,mods:[{id:'signature',name:'Signature Espresso',price:0,cals:null},{id:'decaf',name:'Decaf Espresso',price:0,cals:null}]},{id:'creamer',title:'Add Creamer - Choose up to 1',optional:true,mods:[{id:'nonfat',name:'Nonfat Milk',price:0.25,cals:null},{id:'twopct',name:'2% Milk',price:0.25,cals:null},{id:'whole',name:'Whole Milk',price:0.25,cals:null},{id:'halfhalf',name:'Half & Half',price:0.25,cals:null},{id:'heavy',name:'Heavy Cream',price:0.25,cals:null},{id:'almond',name:'Almond Milk',price:0.25,cals:null},{id:'soy',name:'Soy Milk',price:0.25,cals:null},{id:'oat',name:'Oat Milk',price:0.25,cals:null}]},{id:'syrup',title:'Add Syrup - Choose as many as you like',optional:true,mods:[{id:'vanilla-s',name:'Vanilla Syrup',price:0.25,cals:null},{id:'sf-vanilla',name:'Sugar-Free Vanilla Syrup',price:0.25,cals:null},{id:'caramel-s',name:'Caramel Syrup',price:0.25,cals:null}]},{id:'sauce',title:'Add Sauce - Choose as many as you like',optional:true,mods:[{id:'choc-sauce',name:'Chocolate Sauce',price:0.50,cals:null},{id:'wchoc-sauce',name:'White Chocolate Sauce',price:0.50,cals:null}]},{id:'sweet',title:'Sweeteners - Choose as many as you like',optional:true,mods:[{id:'sugar',name:'Sugar',price:0,cals:null},{id:'raw-sugar',name:'Raw Sugar',price:0,cals:null},{id:'splenda',name:'Splenda',price:0,cals:null},{id:'stevia',name:'Stevia',price:0,cals:null},{id:'honey',name:'Honey',price:0,cals:null}]}]},
+      {id:'white-mocha',name:'White Mocha',kcal:null,desc:'Espresso combined with white chocolate sauce and steamed milk',price:6.45,img:'images/food_white_mocha.jpg',heroImg:'images/img_coffee_hero.jpg',modGroups:[{id:'shots',title:'Espresso Shots - Choose 1',optional:false,mods:[{id:'single',name:'Single',price:0,cals:null},{id:'double',name:'Double',price:0.30,cals:null},{id:'triple',name:'Triple',price:0.60,cals:null},{id:'quad',name:'Quad',price:0.90,cals:null}]},{id:'style',title:'Espresso Style - Choose 1',optional:false,mods:[{id:'signature',name:'Signature Espresso',price:0,cals:null},{id:'decaf',name:'Decaf Espresso',price:0,cals:null}]},{id:'creamer',title:'Add Creamer - Choose up to 1',optional:true,mods:[{id:'nonfat',name:'Nonfat Milk',price:0.25,cals:null},{id:'twopct',name:'2% Milk',price:0.25,cals:null},{id:'whole',name:'Whole Milk',price:0.25,cals:null},{id:'halfhalf',name:'Half & Half',price:0.25,cals:null},{id:'heavy',name:'Heavy Cream',price:0.25,cals:null},{id:'almond',name:'Almond Milk',price:0.25,cals:null},{id:'soy',name:'Soy Milk',price:0.25,cals:null},{id:'oat',name:'Oat Milk',price:0.25,cals:null}]},{id:'syrup',title:'Add Syrup - Choose as many as you like',optional:true,mods:[{id:'vanilla-s',name:'Vanilla Syrup',price:0.25,cals:null},{id:'sf-vanilla',name:'Sugar-Free Vanilla Syrup',price:0.25,cals:null},{id:'caramel-s',name:'Caramel Syrup',price:0.25,cals:null}]},{id:'sauce',title:'Add Sauce - Choose as many as you like',optional:true,mods:[{id:'choc-sauce',name:'Chocolate Sauce',price:0.50,cals:null},{id:'wchoc-sauce',name:'White Chocolate Sauce',price:0.50,cals:null}]},{id:'sweet',title:'Sweeteners - Choose as many as you like',optional:true,mods:[{id:'sugar',name:'Sugar',price:0,cals:null},{id:'raw-sugar',name:'Raw Sugar',price:0,cals:null},{id:'splenda',name:'Splenda',price:0,cals:null},{id:'stevia',name:'Stevia',price:0,cals:null},{id:'honey',name:'Honey',price:0,cals:null}]}]},
+      {id:'flat-white',name:'Flat White',kcal:null,desc:'A double shot of espresso with steamed milk, served in an 8 ounce cup',price:6.25,img:'images/food_flat_white.jpg',heroImg:'images/img_coffee_hero.jpg',modGroups:[{id:'shots',title:'Espresso Shots - Choose 1',optional:false,mods:[{id:'single',name:'Single',price:0,cals:null},{id:'double',name:'Double',price:0.30,cals:null},{id:'triple',name:'Triple',price:0.60,cals:null},{id:'quad',name:'Quad',price:0.90,cals:null}]},{id:'style',title:'Espresso Style - Choose 1',optional:false,mods:[{id:'signature',name:'Signature Espresso',price:0,cals:null},{id:'decaf',name:'Decaf Espresso',price:0,cals:null}]},{id:'creamer',title:'Add Creamer - Choose up to 1',optional:true,mods:[{id:'nonfat',name:'Nonfat Milk',price:0.25,cals:null},{id:'twopct',name:'2% Milk',price:0.25,cals:null},{id:'whole',name:'Whole Milk',price:0.25,cals:null},{id:'halfhalf',name:'Half & Half',price:0.25,cals:null},{id:'heavy',name:'Heavy Cream',price:0.25,cals:null},{id:'almond',name:'Almond Milk',price:0.25,cals:null},{id:'soy',name:'Soy Milk',price:0.25,cals:null},{id:'oat',name:'Oat Milk',price:0.25,cals:null}]},{id:'syrup',title:'Add Syrup - Choose as many as you like',optional:true,mods:[{id:'vanilla-s',name:'Vanilla Syrup',price:0.25,cals:null},{id:'sf-vanilla',name:'Sugar-Free Vanilla Syrup',price:0.25,cals:null},{id:'caramel-s',name:'Caramel Syrup',price:0.25,cals:null}]},{id:'sauce',title:'Add Sauce - Choose as many as you like',optional:true,mods:[{id:'choc-sauce',name:'Chocolate Sauce',price:0.50,cals:null},{id:'wchoc-sauce',name:'White Chocolate Sauce',price:0.50,cals:null}]},{id:'sweet',title:'Sweeteners - Choose as many as you like',optional:true,mods:[{id:'sugar',name:'Sugar',price:0,cals:null},{id:'raw-sugar',name:'Raw Sugar',price:0,cals:null},{id:'splenda',name:'Splenda',price:0,cals:null},{id:'stevia',name:'Stevia',price:0,cals:null},{id:'honey',name:'Honey',price:0,cals:null}]}]},
+      {id:'cortado',name:'Cortado',kcal:null,desc:'A double shot of rich, bold espresso with an equal amount of steamed milk',price:5.25,img:'images/food_cortado.jpg',heroImg:'images/img_coffee_hero.jpg',modGroups:[{id:'shots',title:'Espresso Shots - Choose 1',optional:false,mods:[{id:'single',name:'Single',price:0,cals:null},{id:'double',name:'Double',price:0.30,cals:null},{id:'triple',name:'Triple',price:0.60,cals:null},{id:'quad',name:'Quad',price:0.90,cals:null}]},{id:'style',title:'Espresso Style - Choose 1',optional:false,mods:[{id:'signature',name:'Signature Espresso',price:0,cals:null},{id:'decaf',name:'Decaf Espresso',price:0,cals:null}]},{id:'creamer',title:'Add Creamer - Choose up to 1',optional:true,mods:[{id:'nonfat',name:'Nonfat Milk',price:0.25,cals:null},{id:'twopct',name:'2% Milk',price:0.25,cals:null},{id:'whole',name:'Whole Milk',price:0.25,cals:null},{id:'halfhalf',name:'Half & Half',price:0.25,cals:null},{id:'heavy',name:'Heavy Cream',price:0.25,cals:null},{id:'almond',name:'Almond Milk',price:0.25,cals:null},{id:'soy',name:'Soy Milk',price:0.25,cals:null},{id:'oat',name:'Oat Milk',price:0.25,cals:null}]},{id:'syrup',title:'Add Syrup - Choose as many as you like',optional:true,mods:[{id:'vanilla-s',name:'Vanilla Syrup',price:0.25,cals:null},{id:'sf-vanilla',name:'Sugar-Free Vanilla Syrup',price:0.25,cals:null},{id:'caramel-s',name:'Caramel Syrup',price:0.25,cals:null}]},{id:'sauce',title:'Add Sauce - Choose as many as you like',optional:true,mods:[{id:'choc-sauce',name:'Chocolate Sauce',price:0.50,cals:null},{id:'wchoc-sauce',name:'White Chocolate Sauce',price:0.50,cals:null}]},{id:'sweet',title:'Sweeteners - Choose as many as you like',optional:true,mods:[{id:'sugar',name:'Sugar',price:0,cals:null},{id:'raw-sugar',name:'Raw Sugar',price:0,cals:null},{id:'splenda',name:'Splenda',price:0,cals:null},{id:'stevia',name:'Stevia',price:0,cals:null},{id:'honey',name:'Honey',price:0,cals:null}]}]}
+    ]},
+    {id:'hot-tea-cat',name:'HOT TEA',items:[
+      {id:'hot-tea',name:'Hot Tea',kcal:null,desc:'Your choice of freshly brewed tea',price:3.95,img:'images/food_hot_tea.jpg',heroImg:'images/img_coffee_hero.jpg',modGroups:[{id:'creamer',title:'Add Creamer - Choose up to 1',optional:true,mods:[{id:'nonfat',name:'Nonfat Milk',price:0.25,cals:null},{id:'twopct',name:'2% Milk',price:0.25,cals:null},{id:'whole',name:'Whole Milk',price:0.25,cals:null},{id:'halfhalf',name:'Half & Half',price:0.25,cals:null},{id:'heavy',name:'Heavy Cream',price:0.25,cals:null},{id:'almond',name:'Almond Milk',price:0.25,cals:null},{id:'soy',name:'Soy Milk',price:0.25,cals:null},{id:'oat',name:'Oat Milk',price:0.25,cals:null}]},{id:'syrup',title:'Add Syrup - Choose as many as you like',optional:true,mods:[{id:'vanilla-s',name:'Vanilla Syrup',price:0.25,cals:null},{id:'sf-vanilla',name:'Sugar-Free Vanilla Syrup',price:0.25,cals:null},{id:'caramel-s',name:'Caramel Syrup',price:0.25,cals:null}]},{id:'sweet',title:'Sweeteners - Choose as many as you like',optional:true,mods:[{id:'sugar',name:'Sugar',price:0,cals:null},{id:'raw-sugar',name:'Raw Sugar',price:0,cals:null},{id:'splenda',name:'Splenda',price:0,cals:null},{id:'stevia',name:'Stevia',price:0,cals:null},{id:'honey',name:'Honey',price:0,cals:null}]}]},
+      {id:'chai-latte',name:'Chai Tea Latte',kcal:null,desc:'Black tea infused with warming spices and cold milk, served over ice',price:5.45,img:'images/food_chai_latte.jpg',heroImg:'images/img_coffee_hero.jpg',modGroups:[{id:'creamer',title:'Add Creamer - Choose up to 1',optional:true,mods:[{id:'nonfat',name:'Nonfat Milk',price:0.25,cals:null},{id:'twopct',name:'2% Milk',price:0.25,cals:null},{id:'whole',name:'Whole Milk',price:0.25,cals:null},{id:'halfhalf',name:'Half & Half',price:0.25,cals:null},{id:'heavy',name:'Heavy Cream',price:0.25,cals:null},{id:'almond',name:'Almond Milk',price:0.25,cals:null},{id:'soy',name:'Soy Milk',price:0.25,cals:null},{id:'oat',name:'Oat Milk',price:0.25,cals:null}]},{id:'syrup',title:'Add Syrup - Choose as many as you like',optional:true,mods:[{id:'vanilla-s',name:'Vanilla Syrup',price:0.25,cals:null},{id:'sf-vanilla',name:'Sugar-Free Vanilla Syrup',price:0.25,cals:null},{id:'caramel-s',name:'Caramel Syrup',price:0.25,cals:null}]},{id:'sweet',title:'Sweeteners - Choose as many as you like',optional:true,mods:[{id:'sugar',name:'Sugar',price:0,cals:null},{id:'raw-sugar',name:'Raw Sugar',price:0,cals:null},{id:'splenda',name:'Splenda',price:0,cals:null},{id:'stevia',name:'Stevia',price:0,cals:null},{id:'honey',name:'Honey',price:0,cals:null}]}]},
+      {id:'matcha-latte',name:'Matcha Latte',kcal:null,desc:'Matcha green tea powder with steamed milk',price:5.45,img:'images/food_matcha.jpg',heroImg:'images/img_coffee_hero.jpg',modGroups:[{id:'shots',title:'Espresso Shots - Choose 1',optional:false,mods:[{id:'single',name:'Single',price:0,cals:null},{id:'double',name:'Double',price:0.30,cals:null},{id:'triple',name:'Triple',price:0.60,cals:null},{id:'quad',name:'Quad',price:0.90,cals:null}]},{id:'style',title:'Espresso Style - Choose 1',optional:false,mods:[{id:'signature',name:'Signature Espresso',price:0,cals:null},{id:'decaf',name:'Decaf Espresso',price:0,cals:null}]},{id:'creamer',title:'Add Creamer - Choose up to 1',optional:true,mods:[{id:'nonfat',name:'Nonfat Milk',price:0.25,cals:null},{id:'twopct',name:'2% Milk',price:0.25,cals:null},{id:'whole',name:'Whole Milk',price:0.25,cals:null},{id:'halfhalf',name:'Half & Half',price:0.25,cals:null},{id:'heavy',name:'Heavy Cream',price:0.25,cals:null},{id:'almond',name:'Almond Milk',price:0.25,cals:null},{id:'soy',name:'Soy Milk',price:0.25,cals:null},{id:'oat',name:'Oat Milk',price:0.25,cals:null}]},{id:'syrup',title:'Add Syrup - Choose as many as you like',optional:true,mods:[{id:'vanilla-s',name:'Vanilla Syrup',price:0.25,cals:null},{id:'sf-vanilla',name:'Sugar-Free Vanilla Syrup',price:0.25,cals:null},{id:'caramel-s',name:'Caramel Syrup',price:0.25,cals:null}]},{id:'sauce',title:'Add Sauce - Choose as many as you like',optional:true,mods:[{id:'choc-sauce',name:'Chocolate Sauce',price:0.50,cals:null},{id:'wchoc-sauce',name:'White Chocolate Sauce',price:0.50,cals:null}]},{id:'sweet',title:'Sweeteners - Choose as many as you like',optional:true,mods:[{id:'sugar',name:'Sugar',price:0,cals:null},{id:'raw-sugar',name:'Raw Sugar',price:0,cals:null},{id:'splenda',name:'Splenda',price:0,cals:null},{id:'stevia',name:'Stevia',price:0,cals:null},{id:'honey',name:'Honey',price:0,cals:null}]}]}
+    ]},
+    {id:'coffee-pastries',name:'PASTRIES & SNACKS',items:[
+      {id:'croissant',name:'butter croissant',kcal:310,desc:'Flaky all-butter croissant, baked fresh daily',price:3.25,img:'images/food_croissant.jpg',heroImg:'images/img_coffee_hero.jpg',modGroups:[]},
+      {id:'banana-bread',name:'banana walnut bread',kcal:380,desc:'Moist banana bread with toasted walnuts',price:3.50,img:'images/food_banana_bread.jpg',heroImg:'images/img_coffee_hero.jpg',modGroups:[]},
+    ]},
+  ],
+};
+
+const PAIRS=[
+  {id:'coke-20',name:'coca cola classic 20oz',price:1.00,img:'images/food_coke.jpg',venueId:'grill'},
+  {id:'sbux-mocha',name:'starbucks frappuccino mocha',price:4.25,img:'images/food_latte.jpg',venueId:'grill'},
+  {id:'fries',name:'hand cut fries',price:2.00,img:'images/food_fries.jpg',venueId:'grill'},
+];
+
+// ── STATE ──
+const state={screen:'home',stack:['home'],currentVenue:null,currentVenueId:null,currentItem:null,itemQty:1,itemMods:{},cart:[],paymentMethod:'Google Pay',pickupTime:null,pastOrders:[]};
+
+function pickupTime(offset=0){
+  const n=new Date(); n.setMinutes(n.getMinutes()+15+offset);
+  let h=n.getHours(),m=n.getMinutes(),ap=h>=12?'pm':'am';
+  if(h>12)h-=12; if(h===0)h=12;
+  return h+':'+(m<10?'0':'')+m+' '+ap;
+}
+function greeting(){
+  const h=new Date().getHours();
+  return h<12?'Good morning. We are ready to take your order.':h<17?'Good afternoon. We are ready to take your order.':'Good evening. We are ready to take your order.';
+}
+
+// ── NAV ──
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const el=document.getElementById('screen-'+id);
+  if(el) el.classList.add('active');
+  const showNav=['home','orders','account'].includes(id);
+  document.getElementById('bottom-nav').style.display=showNav?'flex':'none';
+  document.getElementById('fab-scan').style.display=id==='home'?'flex':'none';
+  updateBadges();
+}
+function navigate(screenId,data={}){
+  state.stack.push(screenId);
+  if(screenId==='venue'){
+    const v=VENUES.find(x=>x.id===data.venueId);
+    state.currentVenue=v; state.currentVenueId=data.venueId;
+    renderVenueScreen(v,data.venueId);
+  } else if(screenId==='item'){
+    state.currentItem=data.item; state.currentVenueId=data.venueId;
+    state.itemQty=1; state.itemMods={};
+    renderItemScreen(data.item);
+  } else if(screenId==='cart'){
+    state.pickupTime=state.pickupTime||pickupTime();
+    renderCartScreen();
+  } else if(screenId==='success'){
+    renderSuccessScreen();
+  } else if(screenId==='orders'){
+    renderOrdersScreen();
+  }
+  showScreen(screenId);
+}
+function goBack(){
+  if(state.stack.length>1){
+    state.stack.pop();
+    const prev=state.stack[state.stack.length-1];
+    if(['home','orders','account'].includes(prev)){
+      switchTab(prev);
+    } else {
+      if(prev==='cart'){state.pickupTime=state.pickupTime||pickupTime();renderCartScreen();}
+      showScreen(prev);
+    }
+  } else switchTab('home');
+}
+function switchTab(tab){
+  state.stack=['home'];
+  ['home','orders','account'].forEach(t=>{document.getElementById('nav-'+t).classList.toggle('active',t===tab);document.getElementById('rail-'+t).classList.toggle('active',t===tab);});
+  if(tab==='orders') renderOrdersScreen();
+  showScreen(tab);
+}
+function returnHome(){switchTab('home');}
+function navigateToVenue(id){navigate('venue',{venueId:id});}
+
+// ── CART ──
+function cartTotal(){return state.cart.reduce((s,c)=>s+c.lineTotal,0);}
+function cartCount(){return state.cart.reduce((s,c)=>s+c.qty,0);}
+function updateBadges(){
+  const n=cartCount();
+  ['home-badge','venue-badge','item-badge'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el)return; el.textContent=n; el.style.display=n>0?'flex':'none';
+  });
+  // Green "Ready to place your order?" bar (as on boostapp.io) on browse screens once the basket has items
+  const cur=state.stack[state.stack.length-1];
+  const showBar=n>0&&['home','venue','orders','account'].includes(cur);
+  document.getElementById('cart-bar').classList.toggle('show',showBar);
+  if(cur==='home') document.getElementById('fab-scan').style.display=showBar?'none':'flex';
+}
+function calcItemTotal(){
+  const item=state.currentItem; if(!item)return 0;
+  let t=item.price*state.itemQty;
+  (item.modGroups||[]).flatMap(g=>g.mods).forEach(m=>{if(state.itemMods[m.id])t+=m.price*state.itemQty;});
+  return t;
+}
+function updateItemTotal(){
+  const el=document.getElementById('item-total-val');
+  if(el) el.textContent='$'+calcItemTotal().toFixed(2);
+}
+function addToOrder(){
+  const item=state.currentItem;
+  const venue=VENUES.find(v=>v.id===state.currentVenueId);
+  const selectedMods=(item.modGroups||[]).flatMap(g=>g.mods).filter(m=>state.itemMods[m.id]);
+  state.cart.push({venueId:state.currentVenueId,venueName:venue?venue.name:'',item,qty:state.itemQty,mods:selectedMods,lineTotal:calcItemTotal()});
+  state.pickupTime=pickupTime();
+  showToast(item.name+' added to order');
+  updateBadges(); goBack();
+}
+function quickAdd(venueId){
+  const v=VENUES.find(x=>x.id===venueId);
+  const cats=MENU[venueId]||[];
+  const item=cats[0]&&cats[0].items[0];
+  if(!item)return;
+  state.cart.push({venueId,venueName:v?v.name:'',item,qty:1,mods:[],lineTotal:item.price});
+  state.pickupTime=pickupTime();
+  showToast(item.name+' added');
+  updateBadges();
+}
+function removeCartItem(idx){state.cart.splice(idx,1);renderCartScreen();updateBadges();}
+function modifyCartItem(idx){
+  const e=state.cart[idx]; if(!e)return;
+  state.cart.splice(idx,1);
+  state.currentItem=e.item; state.currentVenueId=e.venueId;
+  state.itemQty=e.qty; state.itemMods={};
+  e.mods.forEach(m=>{state.itemMods[m.id]=true;});
+  navigate('item',{item:e.item,venueId:e.venueId});
+  updateBadges();
+}
+function addPairItem(id){
+  const p=PAIRS.find(x=>x.id===id); if(!p)return;
+  const v=VENUES.find(x=>x.id===p.venueId);
+  const allItems=(MENU[p.venueId]||[]).flatMap(c=>c.items);
+  const item=allItems.find(i=>i.id===p.id)||{id:p.id,name:p.name,price:p.price,modGroups:[]};
+  state.cart.push({venueId:p.venueId,venueName:v?v.name:'',item,qty:1,mods:[],lineTotal:p.price});
+  state.pickupTime=pickupTime();
+  showToast(p.name+' added'); updateBadges(); renderCartScreen();
+}
+function placeOrder(){
+  const sub=cartTotal(), tax=sub*0.0825;
+  const order={id:'ORD-'+Date.now().toString().slice(-6),items:[...state.cart],subtotal:sub,tax,orderTotal:sub+tax,pickupTime:state.pickupTime,date:new Date()};
+  state.pastOrders.unshift(order);
+  state.cart=[]; state.pickupTime=null;
+  updateBadges(); navigate('success',{order});
+}
+function selectPayment(m){
+  state.paymentMethod=m;
+  document.getElementById('gpay-check').style.display=m==='Google Pay'?'':'none';
+  document.getElementById('apay-check').style.display=m==='Apple Pay'?'':'none';
+  showToast(m+' selected'); goBack();
+}
+
+// ── RENDERS ──
+function renderVenueCards(){
+  const el=document.getElementById('venue-list');
+  if(!el)return;
+  el.innerHTML=VENUES.map((v,i)=>`
+    <div class="venue-card" onclick="navigateToVenue('${v.id}')">
+      <img id="vc${i}" alt="${v.name}" style="width:100%;height:180px;object-fit:cover;display:block;background:var(--green-5);">
+      <div class="venue-info">
+        <div class="venue-name">${v.name}</div>
+        <div class="venue-loc">${v.location}</div>
+        <div class="venue-meta">
+          <div class="venue-open"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;flex-shrink:0"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${v.status}</div>
+          <div class="venue-time"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;flex-shrink:0"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Order ready ${v.readyTime}</div>
+        </div>
+      </div>
+    </div>`).join('');
+  // Set images after innerHTML to avoid large string issues
+  VENUES.forEach((v,i)=>{
+    const img=document.getElementById('vc'+i);
+    if(img) img.src=v.cardImg;
+  });
+}
+
+function getItemById(venueId,itemId){
+  return (MENU[venueId]||[]).flatMap(c=>c.items).find(i=>i.id===itemId)||null;
+}
+window.getItemById=getItemById;
+
+let scrollSpyObserver=null;
+function setupScrollSpy(venueId){
+  if(scrollSpyObserver) scrollSpyObserver.disconnect();
+  const cats=MENU[venueId]||[];
+  if(!cats.length) return;
+  scrollSpyObserver=new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const catId=entry.target.id.replace('section-','');
+        const idx=cats.findIndex(c=>c.id===catId);
+        if(idx!==-1) cats.forEach((c,i)=>{
+          const t=document.getElementById('tab-'+c.id);
+          if(t) t.className='tab '+(i===idx?'sel':'unsel');
+        });
+      }
+    });
+  },{root:document.getElementById('screen-venue'),rootMargin:'-68px 0px -55% 0px',threshold:0});
+  cats.forEach(cat=>{
+    const el=document.getElementById('section-'+cat.id);
+    if(el) scrollSpyObserver.observe(el);
+  });
+}
+
+function renderVenueScreen(venue,venueId){
+  const heroImg=document.getElementById('venue-hero-img');
+  heroImg.src=''; heroImg.src=venue.heroImg;
+  document.getElementById('venue-hero-name').textContent=venue.name;
+  document.getElementById('venue-hero-sub').textContent=venue.location+' \u2022 Pickup hours: '+venue.pickupHours;
+  const cats=MENU[venueId]||[];
+  document.getElementById('cat-tabs').innerHTML=`
+    <button class="menu-list-btn" onclick="document.getElementById('screen-venue').scrollTo({top:0,behavior:'smooth'})">
+      <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+    </button>
+    ${cats.map((c,i)=>`<button class="tab ${i===0?'sel':'unsel'}" id="tab-${c.id}" onclick="scrollToCategory('${c.id}',${i},'${venueId}')">${c.name}</button>`).join('')}`;
+  document.getElementById('menu-body').innerHTML=cats.map(cat=>`
+    <div id="section-${cat.id}">
+      <div class="menu-sec-hdr">${cat.name}</div>
+      ${cat.items.map(item=>`
+        <div class="menu-item" onclick="navigate('item',{item:getItemById('${venueId}','${item.id}'),venueId:'${venueId}'})">
+          <div class="mi-info">
+            <div class="mi-name">${item.name}</div>
+            ${item.kcal?`<div class="mi-kcal">${item.kcal} kcal</div>`:''}
+            <div class="mi-desc">${item.desc}</div>
+            <div class="mi-price">$${item.price.toFixed(2)}</div>
+          </div>
+          <img class="mi-img${item.isBev?' bev':''}" src="${item.img}" alt="${item.name}">
+        </div>`).join('')}
+    </div>`).join('');
+  setupScrollSpy(venueId);
+}
+
+function scrollToCategory(catId,idx,venueId){
+  const el=document.getElementById('section-'+catId);
+  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  (MENU[venueId]||[]).forEach((c,i)=>{
+    const t=document.getElementById('tab-'+c.id);
+    if(t) t.className='tab '+(i===idx?'sel':'unsel');
+  });
+}
+
+function renderItemScreen(item){
+  document.getElementById('item-hero-img').src=item.heroImg||item.img;
+  document.getElementById('item-body').innerHTML=`
+    <div class="item-title-wrap">
+      <h1>${item.name}</h1>
+      ${item.kcal?`<div class="kcal">${item.kcal} kcal</div>`:''}
+      <div class="desc">${item.desc}</div>
+    </div>
+    <div class="qty-row">
+      <button class="qty-btn" onclick="changeQty(-1)">&#x2212;</button>
+      <div class="qty-num" id="qty-display">1</div>
+      <button class="qty-btn" onclick="changeQty(1)">+</button>
+    </div>
+    ${(item.modGroups||[]).length?`
+      <div class="taste-hdr"><h3>Make it to your taste</h3><p>Choose what to include</p></div>
+      ${(item.modGroups||[]).map(grp=>`
+        <div class="mod-group">
+          <div class="mod-grp-hdr">
+            <div class="mod-grp-title">${grp.title}</div>
+            ${grp.optional===false?'<div class="req-badge">Required</div>':'<div class="opt-badge">Optional</div>'}
+          </div>
+          ${grp.mods.map(mod=>`
+            <div class="mod-item" onclick="toggleMod('${mod.id}',${mod.price})">
+              <div class="mod-cb" id="cb-${mod.id}"></div>
+              <div class="mod-name">${mod.name}</div>
+              <div class="mod-meta">${mod.price>0?'$'+mod.price.toFixed(2):''}${mod.cals!=null?(mod.price>0?'&nbsp;&nbsp;':'')+mod.cals+' Cals':''}</div>
+            </div>`).join('')}
+        </div>`).join('')}`:''}`;
+  updateItemTotal();
+}
+
+function changeQty(d){
+  state.itemQty=Math.max(1,state.itemQty+d);
+  const el=document.getElementById('qty-display'); if(el) el.textContent=state.itemQty;
+  updateItemTotal();
+}
+function toggleMod(modId,price){
+  state.itemMods[modId]=!state.itemMods[modId];
+  const cb=document.getElementById('cb-'+modId);
+  if(cb) cb.className='mod-cb'+(state.itemMods[modId]?' on':'');
+  updateItemTotal();
+}
+
+function renderCartScreen(){
+  const body=document.getElementById('cart-body');
+  const sub=cartTotal(), tax=sub*0.0825, total=sub+tax;
+  const byVenue={};
+  state.cart.forEach((c,idx)=>{
+    if(!byVenue[c.venueId]) byVenue[c.venueId]={name:c.venueName,items:[]};
+    byVenue[c.venueId].items.push({...c,idx});
+  });
+  const itemsHtml=Object.entries(byVenue).map(([vid,vd])=>`
+    <div class="cart-card">
+      <div class="cart-venue-label">${vd.name}</div>
+      ${vd.items.map(c=>`
+        <div class="cart-line"><span class="cart-line-name">${c.qty}&nbsp;&nbsp;${c.item.name}</span><span class="cart-line-price">$${c.lineTotal.toFixed(2)}</span></div>
+        ${c.mods.length?`<div style="font-size:13px;color:var(--muted);margin-bottom:8px;padding-left:16px;">${c.mods.map(m=>m.name).join(', ')}</div>`:''}
+        <div class="cart-actions">
+          <button class="outline-btn" onclick="removeCartItem(${c.idx})">Remove</button>
+          <button class="outline-btn" onclick="modifyCartItem(${c.idx})">Modify</button>
+        </div>`).join('')}
+    </div>`).join('');
+  const pairHtml=PAIRS.map(p=>`
+    <div class="pair-card">
+      <img class="pair-img" src="${p.img}" alt="${p.name}">
+      <div><div class="pair-name">${p.name}</div><div class="pair-price">$${p.price.toFixed(2)}</div><button class="pair-add-btn" onclick="addPairItem('${p.id}')">+ Add</button></div>
+    </div>`).join('');
+  body.innerHTML=`
+    <div class="cart-title">Your Order</div>
+    <div style="margin-bottom:16px;">
+      <div class="cart-sec-title">Pickup</div>
+      <div class="cart-card">
+        <div class="pickup-row"><div class="pickup-label">Collect order from*</div><div class="pickup-val">${state.currentVenue?state.currentVenue.location:'Building 1'}</div></div>
+        <div class="pickup-row"><div class="pickup-row-inner"><div><div class="pickup-label">Pickup time</div><div class="pickup-val" id="pickup-time-val">${state.pickupTime||pickupTime()}</div></div><button class="change-btn" onclick="openTimeModal()">Change</button></div></div>
+      </div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div class="cart-sec-title">Items</div>
+      ${state.cart.length===0?'<div style="color:var(--muted);font-size:15px;padding:10px 0;">Your cart is empty.</div>':itemsHtml}
+      <button class="add-item-link" onclick="goBack()">+ Add new item</button>
+    </div>
+    <div style="margin-bottom:20px;">
+      <div class="pair-title">Pair your items with</div>
+      <div class="pair-scroll">${pairHtml}</div>
+    </div>
+    <div class="cart-title">Payment</div>
+    <div class="cart-card" style="margin-bottom:16px;">
+      <div class="payment-row" onclick="showToast('Enter promo code')"><div><div class="pay-label">Promo code (optional)</div><div class="pay-val">Apply a promo code</div></div><span style="color:var(--muted);font-size:18px;">&#x203A;</span></div>
+      <div class="payment-row" onclick="navigate('payment')"><div><div class="pay-label">Payment method</div><div class="pay-val"><span class="gpay-badge">G Pay</span> ${state.paymentMethod}</div></div><span style="color:var(--muted);font-size:18px;">&#x203A;</span></div>
+    </div>
+    <div class="cart-title">Price Summary</div>
+    <div class="cart-card">
+      <div class="ps-row"><span>Subtotal</span><span>$${sub.toFixed(2)}</span></div>
+      <div class="ps-row"><span>Taxes</span><span>$${tax.toFixed(2)}</span></div>
+      <div class="ps-row total"><span>Order total</span><span>$${total.toFixed(2)}</span></div>
+    </div>`;
+}
+
+function renderSuccessScreen(){
+  const o=state.pastOrders[0]; if(!o)return;
+  document.getElementById('success-sub').innerHTML='Your order is being prepared.<br>Pick up at <strong>'+(state.currentVenue?state.currentVenue.location:'Building 1')+'</strong> at '+o.pickupTime+'.';
+  document.getElementById('success-detail').innerHTML=`
+    <div class="success-detail-row"><span class="success-detail-label">Order ID</span><span class="success-detail-val">${o.id}</span></div>
+    <div class="success-detail-row"><span class="success-detail-label">Items</span><span class="success-detail-val">${o.items.map(c=>c.item.name).join(', ')}</span></div>
+    <div class="success-detail-row"><span class="success-detail-label">Total</span><span class="success-detail-val">$${o.orderTotal.toFixed(2)}</span></div>
+    <div class="success-detail-row"><span class="success-detail-label">Payment</span><span class="success-detail-val">${state.paymentMethod}</span></div>`;
+}
+
+function renderOrdersScreen(){
+  const el=document.getElementById('orders-list');
+  if(!state.pastOrders.length){el.innerHTML='<div style="padding:60px 20px;text-align:center;color:var(--muted);"><div style="font-size:50px;margin-bottom:16px;">&#x1F9FE;</div><div style="font-size:18px;font-weight:700;margin-bottom:8px;color:var(--text);">No orders yet</div><div style="font-size:14px;">Your completed orders will appear here.</div></div>';return;}
+  el.innerHTML=state.pastOrders.map((o,i)=>{
+    const d=new Date(o.date);
+    const ds=d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+'\u00B7'+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+    return `<div class="order-card"><div class="order-card-venue">${[...new Set(o.items.map(c=>c.venueName))].join(', ')}</div><div class="order-card-items">${o.items.map(c=>c.item.name).join(', ')}</div><div class="order-card-footer"><span class="order-card-date">${ds}</span><span class="order-card-total">$${o.orderTotal.toFixed(2)}</span></div><div style="margin-top:10px;"><button class="reorder-btn" onclick="reorder(${i})">Reorder</button></div></div>`;
+  }).join('');
+}
+function reorder(i){
+  state.pastOrders[i].items.forEach(c=>state.cart.push({...c}));
+  state.pickupTime=pickupTime(); showToast('Items added to your order'); updateBadges(); navigate('cart');
+}
+
+// ── SEARCH ──
+function openSearch(){document.getElementById('search-overlay').classList.add('open');setTimeout(()=>document.getElementById('search-input').focus(),100);}
+function closeSearch(){document.getElementById('search-overlay').classList.remove('open');document.getElementById('search-input').value='';document.getElementById('search-results').innerHTML='<div class="search-empty">Start typing to search the menu</div>';}
+function doSearch(q){
+  const el=document.getElementById('search-results');
+  if(!q.trim()){el.innerHTML='<div class="search-empty">Start typing to search the menu</div>';return;}
+  const ql=q.toLowerCase(), results=[];
+  Object.entries(MENU).forEach(([vid,cats])=>{
+    const v=VENUES.find(x=>x.id===vid);
+    cats.forEach(cat=>cat.items.forEach(item=>{
+      if(item.name.toLowerCase().includes(ql)||(item.desc||'').toLowerCase().includes(ql))
+        results.push({venueId:vid,venueName:v.name,item});
+    }));
+  });
+  el.innerHTML=results.length===0?`<div class="search-empty">No results for "${q}"</div>`:
+    results.map(r=>`<div class="search-result-item" onclick="openSearchResult('${r.venueId}','${r.item.id}')"><img class="sr-img" src="${r.item.img}" alt="${r.item.name}"><div><div class="sr-venue">${r.venueName}</div><div class="sr-name">${r.item.name}</div><div class="sr-price">$${r.item.price.toFixed(2)}${r.item.kcal?' \u00B7 '+r.item.kcal+' kcal':''}</div></div></div>`).join('');
+}
+function openSearchResult(venueId,itemId){
+  closeSearch();
+  if(!state.currentVenueId||state.currentVenueId!==venueId) navigate('venue',{venueId});
+  setTimeout(()=>{const item=getItemById(venueId,itemId);if(item)navigate('item',{item,venueId});},50);
+}
+
+// ── MODALS ──
+function openTimeModal(){
+  const opts=[0,5,10,15,20,30].map(o=>pickupTime(o));
+  const curr=state.pickupTime||opts[1];
+  document.getElementById('time-options').innerHTML=opts.map(t=>`<div class="time-option${t===curr?' sel':''}" onclick="selectTime('${t}')">${t}</div>`).join('');
+  document.getElementById('time-modal').classList.add('open');
+}
+function closeTimeModal(){document.getElementById('time-modal').classList.remove('open');}
+function selectTime(t){
+  state.pickupTime=t;
+  const el=document.getElementById('pickup-time-val'); if(el) el.textContent=t;
+  closeTimeModal();
+}
+function openSiteModal(){document.getElementById('site-modal').classList.add('open');}
+function closeSiteModal(){document.getElementById('site-modal').classList.remove('open');}
+
+// ── TOAST ──
+let toastTimer;
+function showToast(msg){
+  const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show');
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove('show'),2200);
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('greeting').textContent=greeting();
+  renderVenueCards();
+  showScreen('home');
+  document.getElementById('screen-home').addEventListener('scroll',function(){
+    document.getElementById('greeting').style.opacity=Math.max(0,1-this.scrollTop/50);
+    const hh=this.querySelector('.hdr');
+    if(this.scrollTop>214) hh.classList.add('hdr-light'); else hh.classList.remove('hdr-light');
+  });
+  document.getElementById('screen-venue').addEventListener('scroll',function(){
+    const hh=this.querySelector('.hdr');
+    if(this.scrollTop>164) hh.classList.add('hdr-light'); else hh.classList.remove('hdr-light');
+  });
+  document.getElementById('item-scroll-area').addEventListener('scroll',function(){
+    const hh=document.querySelector('#screen-item>.hdr');
+    if(!hh) return;
+    if(this.scrollTop>185) hh.classList.add('hdr-light'); else hh.classList.remove('hdr-light');
+  });
+});
+</script>
+</body>
+</html>
